@@ -38,7 +38,18 @@ class ListViewController: BaseViewController {
     private func configureNavigationBar() {
         navigationItem.title = "전체"
         navigationController?.navigationBar.prefersLargeTitles = true
-        let moreButton = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .done, target: self, action: #selector(moreButtonClicked))
+        let menu = UIMenu(children: [
+            UIAction(title: "마감일 순", handler: { _ in
+                
+            }),
+            UIAction(title: "제목 순", handler: { _ in
+                
+            }),
+            UIAction(title: "우선순위 낮은 순", handler: { _ in
+                
+            })
+        ])
+        let moreButton =  UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), menu: menu)
         navigationItem.rightBarButtonItem = moreButton
     }
     
@@ -86,10 +97,6 @@ extension ListViewController {
         
     }
     
-    @objc
-    private func moreButtonClicked() {
-        
-    }
 }
 
 extension ListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
