@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import RealmSwift
 
 protocol PassDataDelegate {
     func tagReciever(text: String)
@@ -16,7 +17,9 @@ class AddTodoViewController: BaseViewController {
     
     let mainView = AddTodoView()
     let cellText: [String] = ["", "마감일", "태그", "우선 순위", "이미지 추가"]
-    var dueDate: Date?
+    var todoTitle: String!
+    var memo: String?
+    var dueDate: String?
     var tagText: String?
     var priority: String?
 //    let viewControllers: [UIViewController] = [DateViewController(title: "마감일"), TagViewController(title: "태그"), PriorityViewController(title: "우선 순위"), PriorityViewController()]
@@ -64,25 +67,24 @@ extension AddTodoViewController {
     
     @objc
     private func addButtonClicked() {
-        
+        let realm = try! Realm()
+        let data = ReminderItem(title: todoTitle, memo: memo, dueDate: dueDate, tag: tagText, priority: priority)
+        try! realm.write {
+            realm.add(data)
+        }
     }
     
     @objc
     private func passData(notification: NSNotification) {
         if let value = notification.userInfo?["priority"] as? String {
             priority = value
-            print(value)
+            mainView.tableView.reloadSections([3], with: .automatic)
         }
     }
     
     private func changeDateFormat(data: Date) -> String{
-        let originFormat = DateFormatter()
-        originFormat.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let origin = originFormat.string(from: data)
-        
         let targetFormat = DateFormatter()
         targetFormat.dateFormat = "yyyy.M.d. a HH:mm"
-        
         return targetFormat.string(from: data)
     }
     
@@ -111,8 +113,16 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
             var content = cell.defaultContentConfiguration()
             content.text = cellText[indexPath.section]
             content.textProperties.color = .white
-            content.secondaryText = changeDateFormat(data: dueDate ?? Date())
-            content.secondaryTextProperties.font = .systemFont(ofSize: 8)
+            if indexPath.section == 1 {
+                content.secondaryText = dueDate
+                content.secondaryTextProperties.font = .systemFont(ofSize: 10)
+            } else if indexPath.section == 2 {
+                content.secondaryText = tagText
+                content.secondaryTextProperties.font = .systemFont(ofSize: 10)
+            } else if indexPath.section == 3 {
+                content.secondaryText = priority
+                content.secondaryTextProperties.font = .systemFont(ofSize: 10)
+            }
             cell.contentConfiguration = content
             return cell
         } else {
@@ -157,7 +167,7 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.section == 1{
             let vc = DateViewController(title: cellText[indexPath.section])
             vc.dataSpace = { value in
-                self.dueDate = value
+                self.dueDate = self.changeDateFormat(data: value)
                 tableView.reloadSections([indexPath.section], with: .automatic)
             }
             navigationController?.pushViewController(vc, animated: true)
@@ -213,5 +223,12 @@ extension AddTodoViewController: UITextViewDelegate {
 extension AddTodoViewController: PassDataDelegate {
     func tagReciever(text: String) {
         tagText = text
+        mainView.tableView.reloadSections([2], with: .automatic)
+    }
+}
+
+extension AddTodoViewController: UITextFieldDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        todoTitle = textView.text
     }
 }

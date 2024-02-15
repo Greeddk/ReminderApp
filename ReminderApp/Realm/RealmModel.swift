@@ -9,5 +9,22 @@ import Foundation
 import RealmSwift
 
 class ReminderItem: Object {
-    @Persisted(primaryKey: true) var id: ObjectId
+    @Persisted(primaryKey: true) var id: ObjectId //아이디
+    @Persisted var title: String
+    @Persisted var memo: String?
+    @Persisted var dueDate: String?
+    @Persisted var tag: String?
+    @Persisted var priority: String?
+    
+    convenience init(title: String, memo: String? = nil, dueDate: String? = nil, tag: String? = nil, priority: String? = nil) {
+        self.init()
+        self.title = title
+        self.memo = memo
+        self.dueDate = dueDate
+        self.tag = tag
+        self.priority = priority
+    }
 }
+
+
+
