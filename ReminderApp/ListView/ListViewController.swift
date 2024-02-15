@@ -15,7 +15,8 @@ class ListViewController: BaseViewController {
     var addListButton: UIBarButtonItem!
     
     let titles = ["오늘", "예정", "전체", "깃발 표시", "완료됨"]
-    let icons = ["13.square", "calendar", "tray.fill", "flag.fill", "checkmark"]
+    var icons = ["13.square", "calendar", "tray.fill", "flag.fill", "checkmark"]
+    let colors: [UIColor] = [.systemBlue, .systemRed, .systemGray, .systemOrange, .systemGray]
     
     override func loadView() {
         self.view = mainView
@@ -23,7 +24,7 @@ class ListViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        icons[0] = changeDayIcon()
     }
     
     override func configureView() {
@@ -61,6 +62,14 @@ class ListViewController: BaseViewController {
         button.addTarget(self, action: #selector(newTodoButtonClicked), for: .touchUpInside)
         return button
     }
+    
+    private func changeDayIcon() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd"
+        let result = dateFormatter.string(from: Date())
+        
+        return result + ".square"
+    }
 
 }
 
@@ -92,6 +101,7 @@ extension ListViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ListCollectionViewCell.identifier, for: indexPath) as! ListCollectionViewCell
         cell.imageView.image = UIImage(systemName: icons[indexPath.row])
+        cell.circleView.backgroundColor = colors[indexPath.row]
         cell.titleLabel.text = titles[indexPath.row]
         cell.numberLabel.text = "1"
         return cell

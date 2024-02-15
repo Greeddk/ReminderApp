@@ -45,7 +45,7 @@ class ListCollectionViewCell: UICollectionViewCell {
         imageView.snp.makeConstraints { make in
             make.centerX.equalTo(circleView)
             make.centerY.equalTo(circleView)
-            make.size.equalTo(24)
+            make.size.equalTo(20)
         }
         
         titleLabel.snp.makeConstraints { make in
@@ -60,7 +60,7 @@ class ListCollectionViewCell: UICollectionViewCell {
     }
     
     func configureView() {
-        backView.backgroundColor = .systemGray5
+        backView.backgroundColor = .systemGray6
         backView.layer.cornerRadius = 8
         circleView.layer.cornerRadius = 16
         circleView.backgroundColor = .systemBlue

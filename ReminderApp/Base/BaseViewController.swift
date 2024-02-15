@@ -28,4 +28,8 @@ class BaseViewController: UIViewController {
         
     }
     
+    @objc func cancelButtonClicked() {
+        navigationController?.popViewController(animated: true)
+    }
+    
 }

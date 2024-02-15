@@ -8,10 +8,18 @@
 import UIKit
 import SnapKit
 
+protocol PassDataDelegate {
+    func tagReciever(text: String)
+}
+
 class AddTodoViewController: BaseViewController {
     
     let mainView = AddTodoView()
     let cellText: [String] = ["", "마감일", "태그", "우선 순위", "이미지 추가"]
+    var dueDate: Date?
+    var tagText: String?
+    var priority: String?
+//    let viewControllers: [UIViewController] = [DateViewController(title: "마감일"), TagViewController(title: "태그"), PriorityViewController(title: "우선 순위"), PriorityViewController()]
     
     override func loadView() {
         self.view = mainView
@@ -19,7 +27,7 @@ class AddTodoViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemGray6
+        NotificationCenter.default.addObserver(self, selector: #selector(passData), name: NSNotification.Name("priority"), object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -29,6 +37,7 @@ class AddTodoViewController: BaseViewController {
     
     override func configureView() {
         configureNavigationBar()
+        view.backgroundColor = .systemGray6
         mainView.tableView.dataSource = self
         mainView.tableView.delegate = self
         mainView.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
@@ -38,7 +47,7 @@ class AddTodoViewController: BaseViewController {
     private func configureNavigationBar() {
         navigationController?.isNavigationBarHidden = false
         navigationItem.title = "새로운 할 일"
-        let cancelButton = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancelButtonClicked))
+        let cancelButton = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(dismissModalView))
         let addButton = UIBarButtonItem(title: "추가", style: .plain, target: self, action: #selector(addButtonClicked))
         navigationItem.leftBarButtonItem = cancelButton
         navigationItem.rightBarButtonItem = addButton
@@ -49,13 +58,32 @@ class AddTodoViewController: BaseViewController {
 extension AddTodoViewController {
     
     @objc
-    private func cancelButtonClicked() {
-        
+    func dismissModalView() {
+        dismiss(animated: true)
     }
     
     @objc
     private func addButtonClicked() {
         
+    }
+    
+    @objc
+    private func passData(notification: NSNotification) {
+        if let value = notification.userInfo?["priority"] as? String {
+            priority = value
+            print(value)
+        }
+    }
+    
+    private func changeDateFormat(data: Date) -> String{
+        let originFormat = DateFormatter()
+        originFormat.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let origin = originFormat.string(from: data)
+        
+        let targetFormat = DateFormatter()
+        targetFormat.dateFormat = "yyyy.M.d. a HH:mm"
+        
+        return targetFormat.string(from: data)
     }
     
 }
@@ -80,8 +108,12 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
         
         if indexPath.section != 0 {
             cell.accessoryType = .disclosureIndicator
-            cell.textLabel?.text = cellText[indexPath.section]
-            cell.textLabel?.textColor = .white
+            var content = cell.defaultContentConfiguration()
+            content.text = cellText[indexPath.section]
+            content.textProperties.color = .white
+            content.secondaryText = changeDateFormat(data: dueDate ?? Date())
+            content.secondaryTextProperties.font = .systemFont(ofSize: 8)
+            cell.contentConfiguration = content
             return cell
         } else {
             if indexPath.row == 0 {
@@ -117,6 +149,27 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
+//        if indexPath.section != 0 {
+//            let vc = viewControllers[indexPath.section - 1]
+//            navigationController?.pushViewController(vc, animated: true)
+//        }
+        // 값전달 연습을 위해
+        if indexPath.section == 1{
+            let vc = DateViewController(title: cellText[indexPath.section])
+            vc.dataSpace = { value in
+                self.dueDate = value
+                tableView.reloadSections([indexPath.section], with: .automatic)
+            }
+            navigationController?.pushViewController(vc, animated: true)
+        } else if indexPath.section == 2 {
+            let vc = TagViewController(title: cellText[indexPath.section])
+            vc.delegate = self
+            navigationController?.pushViewController(vc, animated: true)
+        } else if indexPath.section == 3 {
+            let vc = PriorityViewController(title: cellText[indexPath.section])
+            navigationController?.pushViewController(vc, animated: true)
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -155,4 +208,10 @@ extension AddTodoViewController: UITextViewDelegate {
         }
     }
     
+}
+
+extension AddTodoViewController: PassDataDelegate {
+    func tagReciever(text: String) {
+        tagText = text
+    }
 }

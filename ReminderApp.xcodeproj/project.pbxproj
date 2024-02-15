@@ -21,6 +21,14 @@
 		424233592B7CA3310087636D /* AddTodoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424233582B7CA3310087636D /* AddTodoViewController.swift */; };
 		4242335C2B7CA3A20087636D /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4242335B2B7CA3A20087636D /* SnapKit */; };
 		4242335E2B7CA9680087636D /* AddTodoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4242335D2B7CA9680087636D /* AddTodoView.swift */; };
+		4242336B2B7DE57D0087636D /* RealmModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4242336A2B7DE57D0087636D /* RealmModel.swift */; };
+		4242336E2B7DE5900087636D /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 4242336D2B7DE5900087636D /* Realm */; };
+		424233702B7DE5900087636D /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4242336F2B7DE5900087636D /* RealmSwift */; };
+		424233732B7E324E0087636D /* DateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424233722B7E324E0087636D /* DateViewController.swift */; };
+		424233752B7E32540087636D /* TagViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424233742B7E32540087636D /* TagViewController.swift */; };
+		424233772B7E32650087636D /* PriorityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424233762B7E32650087636D /* PriorityViewController.swift */; };
+		424233792B7E39860087636D /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424233782B7E39860087636D /* UITextField+Extension.swift */; };
+		4242337B2B7E44ED0087636D /* OptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4242337A2B7E44ED0087636D /* OptionTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +47,12 @@
 		424233562B7CA2470087636D /* ListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCollectionViewCell.swift; sourceTree = "<group>"; };
 		424233582B7CA3310087636D /* AddTodoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTodoViewController.swift; sourceTree = "<group>"; };
 		4242335D2B7CA9680087636D /* AddTodoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTodoView.swift; sourceTree = "<group>"; };
+		4242336A2B7DE57D0087636D /* RealmModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmModel.swift; sourceTree = "<group>"; };
+		424233722B7E324E0087636D /* DateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateViewController.swift; sourceTree = "<group>"; };
+		424233742B7E32540087636D /* TagViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagViewController.swift; sourceTree = "<group>"; };
+		424233762B7E32650087636D /* PriorityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriorityViewController.swift; sourceTree = "<group>"; };
+		424233782B7E39860087636D /* UITextField+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extension.swift"; sourceTree = "<group>"; };
+		4242337A2B7E44ED0087636D /* OptionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,6 +60,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				424233702B7DE5900087636D /* RealmSwift in Frameworks */,
+				4242336E2B7DE5900087636D /* Realm in Frameworks */,
 				4242335C2B7CA3A20087636D /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -72,12 +88,14 @@
 		424233332B7C91380087636D /* ReminderApp */ = {
 			isa = PBXGroup;
 			children = (
+				424233692B7DE5730087636D /* Realm */,
 				424233532B7C96A10087636D /* Extension */,
 				424233482B7C914F0087636D /* Base */,
 				4242334E2B7C93210087636D /* AddTodoView */,
 				4242334B2B7C92260087636D /* ListView */,
-				424233342B7C91380087636D /* AppDelegate.swift */,
+				424233712B7E31740087636D /* optionView */,
 				424233362B7C91380087636D /* SceneDelegate.swift */,
+				424233342B7C91380087636D /* AppDelegate.swift */,
 				424233382B7C91380087636D /* ViewController.swift */,
 				4242333D2B7C913A0087636D /* Assets.xcassets */,
 				4242333F2B7C913A0087636D /* LaunchScreen.storyboard */,
@@ -110,6 +128,7 @@
 			children = (
 				424233582B7CA3310087636D /* AddTodoViewController.swift */,
 				4242335D2B7CA9680087636D /* AddTodoView.swift */,
+				4242337A2B7E44ED0087636D /* OptionTableViewCell.swift */,
 			);
 			path = AddTodoView;
 			sourceTree = "<group>";
@@ -118,8 +137,27 @@
 			isa = PBXGroup;
 			children = (
 				424233542B7C96EA0087636D /* UIView+Extension.swift */,
+				424233782B7E39860087636D /* UITextField+Extension.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		424233692B7DE5730087636D /* Realm */ = {
+			isa = PBXGroup;
+			children = (
+				4242336A2B7DE57D0087636D /* RealmModel.swift */,
+			);
+			path = Realm;
+			sourceTree = "<group>";
+		};
+		424233712B7E31740087636D /* optionView */ = {
+			isa = PBXGroup;
+			children = (
+				424233722B7E324E0087636D /* DateViewController.swift */,
+				424233742B7E32540087636D /* TagViewController.swift */,
+				424233762B7E32650087636D /* PriorityViewController.swift */,
+			);
+			path = optionView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -140,6 +178,8 @@
 			name = ReminderApp;
 			packageProductDependencies = (
 				4242335B2B7CA3A20087636D /* SnapKit */,
+				4242336D2B7DE5900087636D /* Realm */,
+				4242336F2B7DE5900087636D /* RealmSwift */,
 			);
 			productName = ReminderApp;
 			productReference = 424233312B7C91380087636D /* ReminderApp.app */;
@@ -171,6 +211,7 @@
 			mainGroup = 424233282B7C91380087636D;
 			packageReferences = (
 				4242335A2B7CA3A20087636D /* XCRemoteSwiftPackageReference "SnapKit" */,
+				4242336C2B7DE5900087636D /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			productRefGroup = 424233322B7C91380087636D /* Products */;
 			projectDirPath = "";
@@ -199,9 +240,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				424233572B7CA2470087636D /* ListCollectionViewCell.swift in Sources */,
+				4242336B2B7DE57D0087636D /* RealmModel.swift in Sources */,
 				424233392B7C91380087636D /* ViewController.swift in Sources */,
 				4242334A2B7C915C0087636D /* BaseViewController.swift in Sources */,
+				4242337B2B7E44ED0087636D /* OptionTableViewCell.swift in Sources */,
 				424233552B7C96EA0087636D /* UIView+Extension.swift in Sources */,
+				424233792B7E39860087636D /* UITextField+Extension.swift in Sources */,
+				424233732B7E324E0087636D /* DateViewController.swift in Sources */,
 				424233502B7C95300087636D /* ListView.swift in Sources */,
 				424233352B7C91380087636D /* AppDelegate.swift in Sources */,
 				4242335E2B7CA9680087636D /* AddTodoView.swift in Sources */,
@@ -209,6 +254,8 @@
 				424233522B7C95460087636D /* BaseView.swift in Sources */,
 				4242334D2B7C92580087636D /* ListViewController.swift in Sources */,
 				424233372B7C91380087636D /* SceneDelegate.swift in Sources */,
+				424233752B7E32540087636D /* TagViewController.swift in Sources */,
+				424233772B7E32650087636D /* PriorityViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -437,6 +484,14 @@
 				minimumVersion = 5.7.0;
 			};
 		};
+		4242336C2B7DE5900087636D /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -444,6 +499,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4242335A2B7CA3A20087636D /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		4242336D2B7DE5900087636D /* Realm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4242336C2B7DE5900087636D /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = Realm;
+		};
+		4242336F2B7DE5900087636D /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4242336C2B7DE5900087636D /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
