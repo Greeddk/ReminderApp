@@ -14,6 +14,9 @@ class ListViewController: BaseViewController {
     var newTodoButton: UIBarButtonItem!
     var addListButton: UIBarButtonItem!
     
+    let titles = ["오늘", "예정", "전체", "깃발 표시", "완료됨"]
+    let icons = ["13.square", "calendar", "tray.fill", "flag.fill", "checkmark"]
+    
     override func loadView() {
         self.view = mainView
     }
@@ -83,13 +86,13 @@ extension ListViewController {
 extension ListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return 5
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ListCollectionViewCell.identifier, for: indexPath) as! ListCollectionViewCell
-        cell.imageView.image = UIImage(systemName: "person")
-        cell.titleLabel.text = "오늘"
+        cell.imageView.image = UIImage(systemName: icons[indexPath.row])
+        cell.titleLabel.text = titles[indexPath.row]
         cell.numberLabel.text = "1"
         return cell
     }

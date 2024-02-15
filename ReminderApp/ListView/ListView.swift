@@ -31,10 +31,10 @@ class ListView: BaseView {
 extension ListView {
     static func configureCollectionViewLayout() -> UICollectionViewLayout {
         let spacing: CGFloat = 12
-        let cellWidth = UIScreen.main.bounds.width - 3 * spacing
+        let cellWidth = UIScreen.main.bounds.width - 3 * spacing - 4
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = spacing
-        layout.minimumInteritemSpacing = spacing
+        layout.minimumInteritemSpacing = 16
         layout.sectionInset = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: spacing)
         layout.itemSize = CGSize(width: cellWidth / 2, height: 80)
         layout.scrollDirection = .vertical

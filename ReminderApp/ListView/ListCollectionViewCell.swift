@@ -11,6 +11,7 @@ import SnapKit
 class ListCollectionViewCell: UICollectionViewCell {
     
     let backView = UIView()
+    let circleView = UIView()
     let imageView = UIImageView()
     let titleLabel = UILabel()
     let numberLabel = UILabel()
@@ -27,7 +28,7 @@ class ListCollectionViewCell: UICollectionViewCell {
     }
     
     func configureHierarchy() {
-        contentView.addSubViews([backView, imageView, titleLabel, numberLabel])
+        contentView.addSubViews([backView, circleView, imageView, titleLabel, numberLabel])
     }
     
     func configureLayout() {
@@ -35,19 +36,25 @@ class ListCollectionViewCell: UICollectionViewCell {
             make.edges.equalToSuperview()
         }
         
-        imageView.snp.makeConstraints { make in
-            make.top.equalTo(backView.snp.top).offset(8)
-            make.leading.equalTo(backView.snp.leading).offset(8)
+        circleView.snp.makeConstraints { make in
+            make.top.equalTo(backView.snp.top).offset(12)
+            make.leading.equalTo(backView.snp.leading).offset(12)
             make.size.equalTo(32)
         }
         
+        imageView.snp.makeConstraints { make in
+            make.centerX.equalTo(circleView)
+            make.centerY.equalTo(circleView)
+            make.size.equalTo(24)
+        }
+        
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(imageView.snp.bottom).offset(8)
+            make.top.equalTo(imageView.snp.bottom).offset(12)
             make.centerX.equalTo(imageView)
         }
         
         numberLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(backView.snp.trailing).offset(-8)
+            make.trailing.equalTo(backView.snp.trailing).offset(-12)
             make.centerY.equalTo(imageView)
         }
     }
@@ -55,8 +62,8 @@ class ListCollectionViewCell: UICollectionViewCell {
     func configureView() {
         backView.backgroundColor = .systemGray5
         backView.layer.cornerRadius = 8
-        imageView.layer.cornerRadius = 16
-        imageView.backgroundColor = .systemBlue
+        circleView.layer.cornerRadius = 16
+        circleView.backgroundColor = .systemBlue
         imageView.tintColor = .white
         titleLabel.textColor = .lightGray
         numberLabel.textColor = .white
