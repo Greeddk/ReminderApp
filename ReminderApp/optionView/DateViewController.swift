@@ -37,7 +37,7 @@ class DateViewController: BaseViewController {
 
     override func configureView() {
         view.backgroundColor = .systemGray6
-        datePicker.preferredDatePickerStyle = .wheels
+        datePicker.preferredDatePickerStyle = .inline
         navigationItem.title = navigationTitle
         let cancel = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancelButtonClicked))
         let complete = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(completeButtonClicked))

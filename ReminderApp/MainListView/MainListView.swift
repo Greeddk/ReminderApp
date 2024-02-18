@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class ListView: BaseView {
+class MainListView: BaseView {
     
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: configureCollectionViewLayout())
     
@@ -28,7 +28,7 @@ class ListView: BaseView {
 
 }
 
-extension ListView {
+extension MainListView {
     static func configureCollectionViewLayout() -> UICollectionViewLayout {
         let spacing: CGFloat = 12
         let cellWidth = UIScreen.main.bounds.width - 3 * spacing - 4

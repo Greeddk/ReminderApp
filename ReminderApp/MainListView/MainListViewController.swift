@@ -6,10 +6,11 @@
 //
 
 import UIKit
+import RealmSwift
 
-class ListViewController: BaseViewController {
+class MainListViewController: BaseViewController {
     
-    let mainView = ListView()
+    let mainView = MainListView()
     
     var newTodoButton: UIBarButtonItem!
     var addListButton: UIBarButtonItem!
@@ -17,6 +18,10 @@ class ListViewController: BaseViewController {
     let titles = ["오늘", "예정", "전체", "깃발 표시", "완료됨"]
     var icons = ["13.square", "calendar", "tray.fill", "flag.fill", "checkmark"]
     let colors: [UIColor] = [.systemBlue, .systemRed, .systemGray, .systemOrange, .systemGray]
+    
+    var list: Results<ReminderItem>!
+    let repository = ReminderItemRepository()
+    var counts: [Int] = [0,0,0,0,0]
     
     override func loadView() {
         self.view = mainView
@@ -32,7 +37,8 @@ class ListViewController: BaseViewController {
         configureNavigationBar()
         mainView.collectionView.delegate = self
         mainView.collectionView.dataSource = self
-        mainView.collectionView.register(ListCollectionViewCell.self, forCellWithReuseIdentifier: ListCollectionViewCell.identifier)
+        mainView.collectionView.register(MainListCollectionViewCell.self, forCellWithReuseIdentifier: MainListCollectionViewCell.identifier)
+        fetchDB()
     }
     
     private func configureNavigationBar() {
@@ -40,13 +46,13 @@ class ListViewController: BaseViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         let menu = UIMenu(children: [
             UIAction(title: "마감일 순", handler: { _ in
-                
+                self.list = self.repository.sortItem("dueDate")
             }),
             UIAction(title: "제목 순", handler: { _ in
-                
+                self.list = self.repository.sortItem("title")
             }),
             UIAction(title: "우선순위 낮은 순", handler: { _ in
-                
+                self.list = self.repository.sortItem("priority")
             })
         ])
         let moreButton =  UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), menu: menu)
@@ -81,10 +87,17 @@ class ListViewController: BaseViewController {
         
         return result + ".square"
     }
+    
+    private func fetchDB() {
+        list = repository.readDB()
+        counts[0] = list.count
+        counts[2] = list.count
+//        mainView.collectionView.reloadData()
+    }
 
 }
 
-extension ListViewController {
+extension MainListViewController {
     
     @objc
     private func newTodoButtonClicked() {
@@ -99,18 +112,18 @@ extension ListViewController {
     
 }
 
-extension ListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension MainListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 5
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ListCollectionViewCell.identifier, for: indexPath) as! ListCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainListCollectionViewCell.identifier, for: indexPath) as! MainListCollectionViewCell
         cell.imageView.image = UIImage(systemName: icons[indexPath.row])
         cell.circleView.backgroundColor = colors[indexPath.row]
         cell.titleLabel.text = titles[indexPath.row]
-        cell.numberLabel.text = "1"
+        cell.numberLabel.text = "\(counts[indexPath.item])"
         return cell
     }
     

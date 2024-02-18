@@ -7,7 +7,6 @@
 
 import UIKit
 import SnapKit
-import RealmSwift
 
 protocol PassDataDelegate {
     func tagReciever(text: String)
@@ -16,13 +15,15 @@ protocol PassDataDelegate {
 class AddTodoViewController: BaseViewController {
     
     let mainView = AddTodoView()
+    
+    let repository = ReminderItemRepository()
+    
     let cellText: [String] = ["", "마감일", "태그", "우선 순위", "이미지 추가"]
     var todoTitle: String = ""
     var memo: String?
     var dueDate: String?
     var tagText: String?
     var priority: String?
-//    let viewControllers: [UIViewController] = [DateViewController(title: "마감일"), TagViewController(title: "태그"), PriorityViewController(title: "우선 순위"), PriorityViewController()]
     
     override func loadView() {
         self.view = mainView
@@ -68,12 +69,8 @@ extension AddTodoViewController {
     
     @objc
     private func addButtonClicked() {
-        let realm = try! Realm()
-        let data = ReminderItem(title: todoTitle, memo: memo, dueDate: dueDate, tag: tagText, priority: priority)
-        try! realm.write {
-            realm.add(data)
-        }
-        print(realm.configuration.fileURL)
+        let item = ReminderItem(title: todoTitle, memo: memo, dueDate: dueDate, tag: tagText, priority: priority)
+        repository.createItem(item)
         dismiss(animated: true)
     }
     
@@ -112,23 +109,21 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
         
         if indexPath.section != 0 {
-//            var content = cell.defaultContentConfiguration()
-//            content.text = cellText[indexPath.section]
-//            content.textProperties.color = .white
-//            if indexPath.section == 1 {
-//                content.secondaryText = dueDate
-//                content.secondaryTextProperties.font = .systemFont(ofSize: 10)
-//            } else if indexPath.section == 2 {
-//                content.secondaryText = tagText
-//                content.secondaryTextProperties.font = .systemFont(ofSize: 10)
-//            } else if indexPath.section == 3 {
-//                content.secondaryText = priority
-//                content.secondaryTextProperties.font = .systemFont(ofSize: 10)
-//            }
-//            cell.contentConfiguration = content
-            cell.textLabel?.text = cellText[indexPath.section]
-            cell.detailTextLabel?.text = "asdf"
-            cell.detailTextLabel?.textColor = .white
+            var content = cell.defaultContentConfiguration()
+            content.text = cellText[indexPath.section]
+            content.textProperties.color = .white
+            content.textProperties.font = .systemFont(ofSize: 16)
+            if indexPath.section == 1 {
+                content.secondaryText = dueDate
+                content.secondaryTextProperties.font = .systemFont(ofSize: 10)
+            } else if indexPath.section == 2 {
+                content.secondaryText = tagText
+                content.secondaryTextProperties.font = .systemFont(ofSize: 10)
+            } else if indexPath.section == 3 {
+                content.secondaryText = priority
+                content.secondaryTextProperties.font = .systemFont(ofSize: 10)
+            }
+            cell.contentConfiguration = content
             cell.accessoryType = .disclosureIndicator
             return cell
         } else {
@@ -197,7 +192,7 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
                 return 120
             }
         } else {
-            return 50
+            return 55
         }
     }
     
@@ -206,22 +201,23 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
 extension AddTodoViewController: UITextViewDelegate {
     
     func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.textColor == .systemGray3 {
-            textView.text = ""
-            textView.textColor = .white
-        } else {
+        if textView.text.isEmpty {
             textView.text = "메모"
             textView.textColor = .systemGray2
         }
     }
 
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.text.isEmpty {
-            textView.text = "메모"
-            textView.textColor = .systemGray2
+        guard textView.textColor == .systemGray2 else { return }
+        textView.text = ""
+        textView.textColor = .white
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        if textView.textColor == .systemGray2 {
+            memo = ""
         } else {
-            textView.textColor = .white
-            textView.text = ""
+            memo = textView.text!
         }
     }
     
@@ -235,7 +231,9 @@ extension AddTodoViewController: PassDataDelegate {
 }
 
 extension AddTodoViewController: UITextFieldDelegate {
-    func textFieldDidEndEditing(_ textField: UITextField) {
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
         todoTitle = textField.text!
     }
+    
 }

@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class ListCollectionViewCell: UICollectionViewCell {
+class MainListCollectionViewCell: UICollectionViewCell {
     
     let backView = UIView()
     let circleView = UIView()
@@ -50,7 +50,7 @@ class ListCollectionViewCell: UICollectionViewCell {
         
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(imageView.snp.bottom).offset(12)
-            make.centerX.equalTo(imageView)
+            make.leading.equalTo(circleView)
         }
         
         numberLabel.snp.makeConstraints { make in
