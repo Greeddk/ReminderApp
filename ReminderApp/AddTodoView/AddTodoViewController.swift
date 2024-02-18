@@ -17,7 +17,7 @@ class AddTodoViewController: BaseViewController {
     
     let mainView = AddTodoView()
     let cellText: [String] = ["", "마감일", "태그", "우선 순위", "이미지 추가"]
-    var todoTitle: String!
+    var todoTitle: String = ""
     var memo: String?
     var dueDate: String?
     var tagText: String?
@@ -31,6 +31,7 @@ class AddTodoViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(passData), name: NSNotification.Name("priority"), object: nil)
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -72,6 +73,8 @@ extension AddTodoViewController {
         try! realm.write {
             realm.add(data)
         }
+        print(realm.configuration.fileURL)
+        dismiss(animated: true)
     }
     
     @objc
@@ -109,27 +112,31 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
         
         if indexPath.section != 0 {
+//            var content = cell.defaultContentConfiguration()
+//            content.text = cellText[indexPath.section]
+//            content.textProperties.color = .white
+//            if indexPath.section == 1 {
+//                content.secondaryText = dueDate
+//                content.secondaryTextProperties.font = .systemFont(ofSize: 10)
+//            } else if indexPath.section == 2 {
+//                content.secondaryText = tagText
+//                content.secondaryTextProperties.font = .systemFont(ofSize: 10)
+//            } else if indexPath.section == 3 {
+//                content.secondaryText = priority
+//                content.secondaryTextProperties.font = .systemFont(ofSize: 10)
+//            }
+//            cell.contentConfiguration = content
+            cell.textLabel?.text = cellText[indexPath.section]
+            cell.detailTextLabel?.text = "asdf"
+            cell.detailTextLabel?.textColor = .white
             cell.accessoryType = .disclosureIndicator
-            var content = cell.defaultContentConfiguration()
-            content.text = cellText[indexPath.section]
-            content.textProperties.color = .white
-            if indexPath.section == 1 {
-                content.secondaryText = dueDate
-                content.secondaryTextProperties.font = .systemFont(ofSize: 10)
-            } else if indexPath.section == 2 {
-                content.secondaryText = tagText
-                content.secondaryTextProperties.font = .systemFont(ofSize: 10)
-            } else if indexPath.section == 3 {
-                content.secondaryText = priority
-                content.secondaryTextProperties.font = .systemFont(ofSize: 10)
-            }
-            cell.contentConfiguration = content
             return cell
         } else {
             if indexPath.row == 0 {
                 let titleTextField = UITextField()
                 titleTextField.placeholder = "제목"
                 titleTextField.becomeFirstResponder()
+                titleTextField.delegate = self
                 cell.contentView.addSubview(titleTextField)
                 titleTextField.snp.makeConstraints { make in
                     make.top.equalToSuperview().offset(12)
@@ -228,7 +235,7 @@ extension AddTodoViewController: PassDataDelegate {
 }
 
 extension AddTodoViewController: UITextFieldDelegate {
-    func textViewDidChange(_ textView: UITextView) {
-        todoTitle = textView.text
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        todoTitle = textField.text!
     }
 }

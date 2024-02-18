@@ -29,6 +29,7 @@
 		424233772B7E32650087636D /* PriorityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424233762B7E32650087636D /* PriorityViewController.swift */; };
 		424233792B7E39860087636D /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424233782B7E39860087636D /* UITextField+Extension.swift */; };
 		4242337B2B7E44ED0087636D /* OptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4242337A2B7E44ED0087636D /* OptionTableViewCell.swift */; };
+		4242337F2B8213FD0087636D /* ReminderItemRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4242337E2B8213FD0087636D /* ReminderItemRepository.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,7 @@
 		424233762B7E32650087636D /* PriorityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriorityViewController.swift; sourceTree = "<group>"; };
 		424233782B7E39860087636D /* UITextField+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extension.swift"; sourceTree = "<group>"; };
 		4242337A2B7E44ED0087636D /* OptionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionTableViewCell.swift; sourceTree = "<group>"; };
+		4242337E2B8213FD0087636D /* ReminderItemRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderItemRepository.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +148,7 @@
 			isa = PBXGroup;
 			children = (
 				4242336A2B7DE57D0087636D /* RealmModel.swift */,
+				4242337E2B8213FD0087636D /* ReminderItemRepository.swift */,
 			);
 			path = Realm;
 			sourceTree = "<group>";
@@ -239,6 +242,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4242337F2B8213FD0087636D /* ReminderItemRepository.swift in Sources */,
 				424233572B7CA2470087636D /* ListCollectionViewCell.swift in Sources */,
 				4242336B2B7DE57D0087636D /* RealmModel.swift in Sources */,
 				424233392B7C91380087636D /* ViewController.swift in Sources */,
