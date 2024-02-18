@@ -6,24 +6,45 @@
 //
 
 import UIKit
+import RealmSwift
 
-class TodoListViewController: UIViewController {
+class TodoListViewController: BaseViewController {
+    
+    let mainView = TodoListView()
+    
+    var list: Results<ReminderItem>!
+    let repository = ReminderItemRepository()
+    
+    override func loadView() {
+        self.view = mainView
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    override func configureView() {
+        configureNavigationBar()
     }
-    */
-
+    
+    private func configureNavigationBar() {
+        navigationItem.title = "전체"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.systemBlue]
+        let menu = UIMenu(children: [
+            UIAction(title: "마감일 순", handler: { _ in
+                self.list = self.repository.sortItem("dueDate")
+            }),
+            UIAction(title: "제목 순", handler: { _ in
+                self.list = self.repository.sortItem("title")
+            }),
+            UIAction(title: "우선순위 낮은 순", handler: { _ in
+                self.list = self.repository.sortItem("priority")
+            })
+        ])
+        let moreButton =  UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), menu: menu)
+        navigationItem.rightBarButtonItem = moreButton
+    }
+    
 }

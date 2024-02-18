@@ -44,6 +44,7 @@ class MainListViewController: BaseViewController {
     private func configureNavigationBar() {
         navigationItem.title = "전체"
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.backButtonDisplayMode = .minimal
         let menu = UIMenu(children: [
             UIAction(title: "마감일 순", handler: { _ in
                 self.list = self.repository.sortItem("dueDate")
@@ -122,9 +123,14 @@ extension MainListViewController: UICollectionViewDelegate, UICollectionViewData
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainListCollectionViewCell.identifier, for: indexPath) as! MainListCollectionViewCell
         cell.imageView.image = UIImage(systemName: icons[indexPath.row])
         cell.circleView.backgroundColor = colors[indexPath.row]
-        cell.titleLabel.text = titles[indexPath.row]
+        cell.titleLabel.text = titles[indexPath.row] 
         cell.numberLabel.text = "\(counts[indexPath.item])"
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let vc = TodoListViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
     
 }

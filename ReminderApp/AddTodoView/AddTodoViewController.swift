@@ -54,6 +54,7 @@ class AddTodoViewController: BaseViewController {
         navigationItem.title = "새로운 할 일"
         let cancelButton = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(dismissModalView))
         let addButton = UIBarButtonItem(title: "추가", style: .plain, target: self, action: #selector(addButtonClicked))
+        addButton.isEnabled = false
         navigationItem.leftBarButtonItem = cancelButton
         navigationItem.rightBarButtonItem = addButton
     }
@@ -234,6 +235,11 @@ extension AddTodoViewController: UITextFieldDelegate {
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         todoTitle = textField.text!
+        if textField.text == "" {
+            navigationItem.rightBarButtonItem?.isEnabled = false
+        } else {
+            navigationItem.rightBarButtonItem?.isEnabled = true
+        }
     }
     
 }
