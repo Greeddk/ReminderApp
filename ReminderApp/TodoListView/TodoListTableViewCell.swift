@@ -68,4 +68,8 @@ class TodoListTableViewCell: UITableViewCell {
         stackView.axis = .horizontal
         stackView.distribution = .fill
     }
+    
+    private func changeDateFormat(date: Date) {
+        
+    }
 }

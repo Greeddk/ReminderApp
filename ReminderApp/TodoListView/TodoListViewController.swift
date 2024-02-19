@@ -57,6 +57,27 @@ class TodoListViewController: BaseViewController {
         repository.updateDoneValue(item: list[sender.tag])
         mainView.tableView.reloadData()
     }
+    
+    private func changePriorityString(priority: String, title: String) -> NSMutableAttributedString {
+        
+        var text = ""
+        switch priority {
+        case "상":
+            text = "!"
+        case "중":
+            text = "!!"
+        case "하":
+            text = "!!!"
+        default :
+            text = ""
+        }
+        
+        let fullText = text + " " + title
+        let attribtuedString = NSMutableAttributedString(string: fullText)
+        let range = (fullText as NSString).range(of: text)
+        attribtuedString.addAttribute(.foregroundColor, value: UIColor.systemBlue, range: range)
+        return attribtuedString
+    }
 }
 
 extension TodoListViewController: UITableViewDelegate, UITableViewDataSource {
@@ -72,7 +93,9 @@ extension TodoListViewController: UITableViewDelegate, UITableViewDataSource {
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .light)
         let image = list[indexPath.row].done ? UIImage(systemName: "circle.fill", withConfiguration: imageConfig) : UIImage(systemName: "circle", withConfiguration: imageConfig)
         cell.checkButton.setImage(image, for: .normal)
-        cell.titleLabel.text = list[indexPath.row].title
+        let priority = list[indexPath.row].priority
+        let title = changePriorityString(priority: priority ?? "", title: list[indexPath.row].title)
+        cell.titleLabel.attributedText = title
         cell.memoLabel.text = list[indexPath.row].memo
         return cell
     }
