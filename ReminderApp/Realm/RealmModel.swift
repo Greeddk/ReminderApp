@@ -15,6 +15,7 @@ class ReminderItem: Object {
     @Persisted var dueDate: String?
     @Persisted var tag: String?
     @Persisted var priority: String?
+    @Persisted var done: Bool
     
     convenience init(title: String, memo: String? = nil, dueDate: String? = nil, tag: String? = nil, priority: String? = nil) {
         self.init()
@@ -23,6 +24,7 @@ class ReminderItem: Object {
         self.dueDate = dueDate
         self.tag = tag
         self.priority = priority
+        self.done = false
     }
 }
 

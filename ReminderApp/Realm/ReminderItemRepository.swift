@@ -11,6 +11,7 @@ import RealmSwift
 protocol DBProtocol {
     func createItem(_ item: ReminderItem)
     func updateItem(id: ObjectId, title: String, memo: String, dueDate: String, tag: String, priority: String)
+    func updateDoneValue(item: ReminderItem)
     func readDB() -> Results<ReminderItem>
     func sortItem(_ sortKey: String) -> Results<ReminderItem>
     func deleteItem(item: ReminderItem)
@@ -35,6 +36,16 @@ class ReminderItemRepository: DBProtocol {
         do {
             try realm.write {
                 realm.create(ReminderItem.self, value: ["id": id, "title": title, "dueDate": dueDate, "tag": tag, "priority": priority])
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
+    func updateDoneValue(item: ReminderItem) {
+        do {
+            try realm.write {
+                item.done.toggle()
             }
         } catch {
             print(error)

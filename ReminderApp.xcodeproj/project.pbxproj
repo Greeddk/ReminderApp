@@ -31,6 +31,7 @@
 		4242337F2B8213FD0087636D /* ReminderItemRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4242337E2B8213FD0087636D /* ReminderItemRepository.swift */; };
 		424233822B82393D0087636D /* TodoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424233812B82393D0087636D /* TodoListViewController.swift */; };
 		424233842B8239690087636D /* TodoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424233832B8239690087636D /* TodoListView.swift */; };
+		424233862B8242120087636D /* TodoListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424233852B8242120087636D /* TodoListTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +58,7 @@
 		4242337E2B8213FD0087636D /* ReminderItemRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderItemRepository.swift; sourceTree = "<group>"; };
 		424233812B82393D0087636D /* TodoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListViewController.swift; sourceTree = "<group>"; };
 		424233832B8239690087636D /* TodoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListView.swift; sourceTree = "<group>"; };
+		424233852B8242120087636D /* TodoListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,6 +172,7 @@
 			children = (
 				424233812B82393D0087636D /* TodoListViewController.swift */,
 				424233832B8239690087636D /* TodoListView.swift */,
+				424233852B8242120087636D /* TodoListTableViewCell.swift */,
 			);
 			path = TodoListView;
 			sourceTree = "<group>";
@@ -256,6 +259,7 @@
 				4242337F2B8213FD0087636D /* ReminderItemRepository.swift in Sources */,
 				424233572B7CA2470087636D /* MainListCollectionViewCell.swift in Sources */,
 				4242336B2B7DE57D0087636D /* RealmModel.swift in Sources */,
+				424233862B8242120087636D /* TodoListTableViewCell.swift in Sources */,
 				424233392B7C91380087636D /* ViewController.swift in Sources */,
 				4242334A2B7C915C0087636D /* BaseViewController.swift in Sources */,
 				424233552B7C96EA0087636D /* UIView+Extension.swift in Sources */,
