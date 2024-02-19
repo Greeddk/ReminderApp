@@ -10,13 +10,15 @@ import SnapKit
 
 class TodoListTableViewCell: UITableViewCell {
     
-    var checkButton = UIButton()
-    var titleLabel = UILabel()
-    var memoLabel = UILabel()
+    let checkButton = UIButton()
+    let titleLabel = UILabel()
+    let memoLabel = UILabel()
     let stackView = UIStackView()
-    var dueDate = UILabel()
-    var tagLabel = UILabel()
-    var priority = UILabel()
+    let dueDate = UILabel()
+    let tagLabel = UILabel()
+    let priority = UILabel()
+    let userImage = UIImageView()
+    
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -30,7 +32,7 @@ class TodoListTableViewCell: UITableViewCell {
     }
     
     func configureHierarchy() {
-        contentView.addSubViews([checkButton, titleLabel, memoLabel, stackView])
+        contentView.addSubViews([checkButton, titleLabel, memoLabel, stackView, userImage])
         stackView.addSubViews([dueDate, tagLabel, priority])
     }
     
@@ -54,6 +56,12 @@ class TodoListTableViewCell: UITableViewCell {
         stackView.snp.makeConstraints { make in
             make.top.equalTo(memoLabel.snp.bottom).offset(2)
             make.leading.equalTo(titleLabel)
+        }
+        
+        userImage.snp.makeConstraints { make in
+            make.trailing.equalTo(contentView.snp.trailing).offset(-10)
+            make.height.equalTo(contentView).inset(4)
+            make.width.equalTo(80)
         }
     }
     

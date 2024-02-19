@@ -26,6 +26,7 @@ class AddTodoViewController: BaseViewController {
     var dueDate: Date?
     var tagText: String?
     var priority: String?
+    var image = UIImage()
     
     override func loadView() {
         self.view = mainView
@@ -79,6 +80,7 @@ extension AddTodoViewController {
     private func addButtonClicked() {
         let item = ReminderItem(title: todoTitle, memo: memo, dueDate: dueDate, tag: tagText, priority: priority)
         repository.createItem(item)
+        saveImageToDocument(image: image, filename: "\(item.id)")
         dismiss(animated: true)
     }
     
@@ -141,6 +143,9 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
             } else if indexPath.section == 3 {
                 content.secondaryText = changePriorityToString(priority: priority ?? "")
                 content.secondaryTextProperties.font = .systemFont(ofSize: 10)
+            } else {
+                
+                
             }
             cell.contentConfiguration = content
             cell.accessoryType = .disclosureIndicator
@@ -180,10 +185,6 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-//        if indexPath.section != 0 {
-//            let vc = viewControllers[indexPath.section - 1]
-//            navigationController?.pushViewController(vc, animated: true)
-//        }
         // 값전달 연습을 위해
         if indexPath.section == 1{
             let vc = DateViewController(title: cellText[indexPath.section])
@@ -199,6 +200,10 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
         } else if indexPath.section == 3 {
             let vc = PriorityViewController(title: cellText[indexPath.section])
             navigationController?.pushViewController(vc, animated: true)
+        } else if indexPath.section == 4 {
+            let vc = UIImagePickerController()
+            vc.delegate = self
+            present(vc, animated: true)
         }
         
     }
@@ -259,6 +264,21 @@ extension AddTodoViewController: UITextFieldDelegate {
         } else {
             navigationItem.rightBarButtonItem?.isEnabled = true
         }
+    }
+    
+}
+
+extension AddTodoViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            self.image = pickedImage
+        }
+        dismiss(animated: true)
     }
     
 }

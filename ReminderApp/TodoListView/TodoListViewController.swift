@@ -87,15 +87,19 @@ extension TodoListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TodoListTableViewCell.identifier, for: indexPath) as! TodoListTableViewCell
+        let row = list[indexPath.row]
         cell.checkButton.addTarget(self, action: #selector(checkButtonClicked(sender:)), for: .touchUpInside)
         cell.checkButton.tag = indexPath.row
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .light)
-        let image = list[indexPath.row].done ? UIImage(systemName: "circle.fill", withConfiguration: imageConfig) : UIImage(systemName: "circle", withConfiguration: imageConfig)
+        let image = row.done ? UIImage(systemName: "circle.fill", withConfiguration: imageConfig) : UIImage(systemName: "circle", withConfiguration: imageConfig)
         cell.checkButton.setImage(image, for: .normal)
-        let priority = list[indexPath.row].priority
-        let title = changePriorityString(priority: priority ?? "", title: list[indexPath.row].title)
+        let priority = row.priority
+        let title = changePriorityString(priority: priority ?? "", title: row.title)
         cell.titleLabel.attributedText = title
-        cell.memoLabel.text = list[indexPath.row].memo
+        cell.memoLabel.text = row.memo
+        if let image = loadImageFromDocument(filename: "\(row.id)") {
+            cell.userImage.image = image
+        }
         return cell
     }
     
