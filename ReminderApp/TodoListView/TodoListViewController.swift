@@ -36,13 +36,16 @@ class TodoListViewController: BaseViewController {
         navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.systemBlue]
         let menu = UIMenu(children: [
             UIAction(title: "마감일 순", handler: { _ in
-                self.list = self.repository.sortItem("dueDate")
+                self.list = self.list.sorted(byKeyPath: "dueDate", ascending: true)
+                self.mainView.tableView.reloadData()
             }),
             UIAction(title: "제목 순", handler: { _ in
-                self.list = self.repository.sortItem("title")
+                self.list = self.list.sorted(byKeyPath: "title", ascending: true)
+                self.mainView.tableView.reloadData()
             }),
             UIAction(title: "우선순위 낮은 순", handler: { _ in
-                self.list = self.repository.sortItem("priority")
+                self.list = self.list.sorted(byKeyPath: "priority", ascending: true)
+                self.mainView.tableView.reloadData()
             })
         ])
         let moreButton =  UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), menu: menu)

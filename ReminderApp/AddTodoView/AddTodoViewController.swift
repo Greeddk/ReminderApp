@@ -86,6 +86,7 @@ extension AddTodoViewController {
     private func passData(notification: NSNotification) {
         if let value = notification.userInfo?["priority"] as? String {
             priority = value
+            print(value)
             mainView.tableView.reloadSections([3], with: .automatic)
         }
     }

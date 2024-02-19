@@ -10,7 +10,7 @@ import SnapKit
 
 class PriorityViewController: BaseViewController {
     
-    let priorityTextField = UITextField()
+    let prioritySegmentControl = UISegmentedControl()
     var navigationTitle: String!
     
     convenience init(title: String) {
@@ -24,11 +24,11 @@ class PriorityViewController: BaseViewController {
     }
     
     override func configureHierarchy() {
-        view.addSubview(priorityTextField)
+        view.addSubview(prioritySegmentControl)
     }
     
     override func configureLayout() {
-        priorityTextField.snp.makeConstraints { make in
+        prioritySegmentControl.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
             make.horizontalEdges.equalToSuperview().inset(20)
             make.height.equalTo(50)
@@ -42,15 +42,15 @@ class PriorityViewController: BaseViewController {
         let complete = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(completeButtonClicked))
         navigationItem.leftBarButtonItem = cancel
         navigationItem.rightBarButtonItem = complete
-        priorityTextField.keyboardType = .numberPad
-        priorityTextField.backgroundColor = .systemGray5
-        priorityTextField.addLeftPadding()
-        priorityTextField.layer.cornerRadius = 8
-        priorityTextField.placeholder = "우선순위를 설정해주세요.."
+        prioritySegmentControl.insertSegment(withTitle: "상", at: 0, animated: true)
+        prioritySegmentControl.insertSegment(withTitle: "중", at: 1, animated: true)
+        prioritySegmentControl.insertSegment(withTitle: "하", at: 2, animated: true)
+        prioritySegmentControl.selectedSegmentIndex = 0
     }
     
     @objc func completeButtonClicked() {
-        NotificationCenter.default.post(name: NSNotification.Name("priority"), object: nil, userInfo: ["priority": priorityTextField.text!])
+        let priority = prioritySegmentControl.titleForSegment(at: prioritySegmentControl.selectedSegmentIndex) ?? ""
+        NotificationCenter.default.post(name: NSNotification.Name("priority"), object: nil, userInfo: ["priority": "\(priority)"])
         navigationController?.popViewController(animated: true)
     }
     
