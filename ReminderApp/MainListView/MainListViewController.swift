@@ -20,6 +20,7 @@ class MainListViewController: BaseViewController {
     let colors: [UIColor] = [.systemBlue, .systemRed, .systemGray, .systemOrange, .systemGray]
     
     var list: Results<ReminderItem>!
+    var doneList: Results<ReminderItem>!
     let repository = ReminderItemRepository()
     var counts: [Int] = [0,0,0,0,0]
     
@@ -30,6 +31,11 @@ class MainListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         icons[0] = changeDayIcon()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchDB()
     }
     
     override func configureView() {
@@ -91,9 +97,11 @@ class MainListViewController: BaseViewController {
     
     private func fetchDB() {
         list = repository.readDB()
+        doneList = repository.fetchDoneList()
         counts[0] = list.count
         counts[2] = list.count
-//        mainView.collectionView.reloadData()
+        counts[4] = doneList.count
+        mainView.collectionView.reloadData()
     }
 
 }
@@ -130,6 +138,11 @@ extension MainListViewController: UICollectionViewDelegate, UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let vc = TodoListViewController()
+        if indexPath.item != 4 {
+            vc.list = repository.readDB()
+        } else {
+            vc.list = repository.fetchDoneList()
+        }
         navigationController?.pushViewController(vc, animated: true)
     }
     

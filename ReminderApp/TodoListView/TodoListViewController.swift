@@ -24,7 +24,6 @@ class TodoListViewController: BaseViewController {
     }
     
     override func configureView() {
-        list = repository.readDB()
         configureNavigationBar()
         mainView.tableView.delegate = self
         mainView.tableView.dataSource = self
