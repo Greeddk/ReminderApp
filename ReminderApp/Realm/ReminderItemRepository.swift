@@ -67,15 +67,21 @@ class ReminderItemRepository: DBProtocol {
     }
     
     func fetchTodayList() -> Results<ReminderItem> {
-        let result = realm.objects(ReminderItem.self)
-//            .where {
-//            $0.dueDate == Date()
-//        }
-        return result
+        
+        let start = Calendar.current.startOfDay(for: Date())
+        let end = Calendar.current.date(byAdding: .day, value: 1, to: start) ?? Date()
+        let predicate = NSPredicate(format: "dueDate >= %@ && dueDate < %@", start as NSDate, end as NSDate)
+        let list = realm.objects(ReminderItem.self).filter(predicate)
+
+        return list
     }
     
     func fetchFutureList() -> Results<ReminderItem> {
-        return realm.objects(ReminderItem.self)
+        let today = Calendar.current.startOfDay(for: Date())
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today) ?? Date()
+        let predicate = NSPredicate(format: "dueDate > %@", tomorrow as NSDate)
+        let list = realm.objects(ReminderItem.self).filter(predicate)
+        return list
     }
     
     func sortItem(_ sortKey: String) -> Results<ReminderItem> {
