@@ -71,11 +71,21 @@ extension TodoListViewController: UITableViewDelegate, UITableViewDataSource {
         cell.checkButton.setImage(image, for: .normal)
         cell.titleLabel.text = list[indexPath.row].title
         cell.memoLabel.text = list[indexPath.row].memo
-//        cell.titleLabel.text = "test"
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
+    }
+    
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+            self.repository.deleteItem(item: self.list[indexPath.row])
+            self.mainView.tableView.reloadData()
+        }
+        delete.backgroundColor = .systemRed
+        
+        return UISwipeActionsConfiguration(actions: [delete])
     }
 }
