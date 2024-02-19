@@ -49,7 +49,7 @@ class PriorityViewController: BaseViewController {
     }
     
     @objc func completeButtonClicked() {
-        let priority = prioritySegmentControl.titleForSegment(at: prioritySegmentControl.selectedSegmentIndex) ?? ""
+        let priority = prioritySegmentControl.selectedSegmentIndex
         NotificationCenter.default.post(name: NSNotification.Name("priority"), object: nil, userInfo: ["priority": "\(priority)"])
         navigationController?.popViewController(animated: true)
     }

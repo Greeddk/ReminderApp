@@ -44,7 +44,7 @@ class TodoListViewController: BaseViewController {
                 self.mainView.tableView.reloadData()
             }),
             UIAction(title: "우선순위 낮은 순", handler: { _ in
-                self.list = self.list.sorted(byKeyPath: "priority", ascending: true)
+                self.list = self.list.sorted(byKeyPath: "priority", ascending: false)
                 self.mainView.tableView.reloadData()
             })
         ])
@@ -59,14 +59,13 @@ class TodoListViewController: BaseViewController {
     }
     
     private func changePriorityString(priority: String, title: String) -> NSMutableAttributedString {
-        
         var text = ""
         switch priority {
-        case "상":
+        case "0":
             text = "!"
-        case "중":
+        case "1":
             text = "!!"
-        case "하":
+        case "2":
             text = "!!!"
         default :
             text = ""

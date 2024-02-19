@@ -86,7 +86,6 @@ extension AddTodoViewController {
     private func passData(notification: NSNotification) {
         if let value = notification.userInfo?["priority"] as? String {
             priority = value
-            print(value)
             mainView.tableView.reloadSections([3], with: .automatic)
         }
     }
@@ -95,6 +94,15 @@ extension AddTodoViewController {
         let targetFormat = DateFormatter()
         targetFormat.dateFormat = "yyyy.M.d. a HH:mm"
         return targetFormat.string(from: data)
+    }
+    
+    private func changePriorityToString(priority: String) -> String {
+        switch priority {
+        case "0": return "상"
+        case "1": return "중"
+        case "2": return "하"
+        default: return ""
+        }
     }
     
 }
@@ -131,7 +139,7 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
                 content.secondaryText = tagText
                 content.secondaryTextProperties.font = .systemFont(ofSize: 10)
             } else if indexPath.section == 3 {
-                content.secondaryText = priority
+                content.secondaryText = changePriorityToString(priority: priority ?? "")
                 content.secondaryTextProperties.font = .systemFont(ofSize: 10)
             }
             cell.contentConfiguration = content
