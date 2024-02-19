@@ -14,6 +14,8 @@ protocol DBProtocol {
     func updateDoneValue(item: ReminderItem)
     func readDB() -> Results<ReminderItem>
     func fetchDoneList() -> Results<ReminderItem>
+    func fetchTodayList() -> Results<ReminderItem>
+    func fetchFutureList() -> Results<ReminderItem>
     func sortItem(_ sortKey: String) -> Results<ReminderItem>
     func deleteItem(item: ReminderItem)
     func deleteAllDB()
@@ -62,6 +64,18 @@ class ReminderItemRepository: DBProtocol {
             $0.done == true
         }
         return result
+    }
+    
+    func fetchTodayList() -> Results<ReminderItem> {
+        let result = realm.objects(ReminderItem.self)
+//            .where {
+//            $0.dueDate == Date()
+//        }
+        return result
+    }
+    
+    func fetchFutureList() -> Results<ReminderItem> {
+        return realm.objects(ReminderItem.self)
     }
     
     func sortItem(_ sortKey: String) -> Results<ReminderItem> {

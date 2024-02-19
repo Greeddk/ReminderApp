@@ -13,6 +13,7 @@ class TodoListTableViewCell: UITableViewCell {
     var checkButton = UIButton()
     var titleLabel = UILabel()
     var memoLabel = UILabel()
+    let stackView = UIStackView()
     var dueDate = UILabel()
     var tagLabel = UILabel()
     var priority = UILabel()
@@ -29,7 +30,8 @@ class TodoListTableViewCell: UITableViewCell {
     }
     
     func configureHierarchy() {
-        contentView.addSubViews([checkButton, titleLabel, memoLabel, dueDate, tagLabel, priority])
+        contentView.addSubViews([checkButton, titleLabel, memoLabel, stackView])
+        stackView.addSubViews([dueDate, tagLabel, priority])
     }
     
     func configureLayout() {
@@ -48,6 +50,11 @@ class TodoListTableViewCell: UITableViewCell {
             make.top.equalTo(titleLabel.snp.bottom).offset(4)
             make.leading.equalTo(titleLabel)
         }
+        
+        stackView.snp.makeConstraints { make in
+            make.top.equalTo(memoLabel.snp.bottom).offset(2)
+            make.leading.equalTo(titleLabel)
+        }
     }
     
     func configureView() {
@@ -58,5 +65,7 @@ class TodoListTableViewCell: UITableViewCell {
         checkButton.scalesLargeContentImage = true
         titleLabel.textColor = .white
         memoLabel.textColor = .systemGray2
+        stackView.axis = .horizontal
+        stackView.distribution = .fill
     }
 }

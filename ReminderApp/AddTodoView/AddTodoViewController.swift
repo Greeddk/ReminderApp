@@ -18,10 +18,12 @@ class AddTodoViewController: BaseViewController {
     
     let repository = ReminderItemRepository()
     
+    var delegate: ModalViewDelegate?
+    
     let cellText: [String] = ["", "마감일", "태그", "우선 순위", "이미지 추가"]
     var todoTitle: String = ""
     var memo: String?
-    var dueDate: String?
+    var dueDate: Date?
     var tagText: String?
     var priority: String?
     
@@ -38,6 +40,11 @@ class AddTodoViewController: BaseViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         view.endEditing(true)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        delegate?.modalViewDismissed()
     }
     
     override func configureView() {
@@ -115,8 +122,10 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
             content.textProperties.color = .white
             content.textProperties.font = .systemFont(ofSize: 16)
             if indexPath.section == 1 {
-                content.secondaryText = dueDate
-                content.secondaryTextProperties.font = .systemFont(ofSize: 10)
+                if let date = dueDate {
+                    content.secondaryText = changeDateFormat(data: date)
+                    content.secondaryTextProperties.font = .systemFont(ofSize: 10)
+                }
             } else if indexPath.section == 2 {
                 content.secondaryText = tagText
                 content.secondaryTextProperties.font = .systemFont(ofSize: 10)
@@ -170,7 +179,7 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.section == 1{
             let vc = DateViewController(title: cellText[indexPath.section])
             vc.dataSpace = { value in
-                self.dueDate = self.changeDateFormat(data: value)
+                self.dueDate = value
                 tableView.reloadSections([indexPath.section], with: .automatic)
             }
             navigationController?.pushViewController(vc, animated: true)
@@ -229,6 +238,7 @@ extension AddTodoViewController: PassDataDelegate {
         tagText = text
         mainView.tableView.reloadSections([2], with: .automatic)
     }
+    
 }
 
 extension AddTodoViewController: UITextFieldDelegate {

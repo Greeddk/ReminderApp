@@ -8,6 +8,10 @@
 import UIKit
 import RealmSwift
 
+protocol ModalViewDelegate {
+    func modalViewDismissed()
+}
+
 class MainListViewController: BaseViewController {
     
     let mainView = MainListView()
@@ -19,6 +23,8 @@ class MainListViewController: BaseViewController {
     var icons = ["13.square", "calendar", "tray.fill", "flag.fill", "checkmark"]
     let colors: [UIColor] = [.systemBlue, .systemRed, .systemGray, .systemOrange, .systemGray]
     
+    var todayList: Results<ReminderItem>!
+    var futureList: Results<ReminderItem>!
     var list: Results<ReminderItem>!
     var doneList: Results<ReminderItem>!
     let repository = ReminderItemRepository()
@@ -45,6 +51,7 @@ class MainListViewController: BaseViewController {
         mainView.collectionView.dataSource = self
         mainView.collectionView.register(MainListCollectionViewCell.self, forCellWithReuseIdentifier: MainListCollectionViewCell.identifier)
         fetchDB()
+        
     }
     
     private func configureNavigationBar() {
@@ -96,9 +103,12 @@ class MainListViewController: BaseViewController {
     }
     
     private func fetchDB() {
+        todayList = repository.fetchTodayList()
+        futureList = repository.fetchFutureList()
         list = repository.readDB()
         doneList = repository.fetchDoneList()
-        counts[0] = list.count
+        counts[0] = todayList.count
+        counts[1] = futureList.count
         counts[2] = list.count
         counts[4] = doneList.count
         mainView.collectionView.reloadData()
@@ -110,8 +120,10 @@ extension MainListViewController {
     
     @objc
     private func newTodoButtonClicked() {
-        let vc = UINavigationController(rootViewController: AddTodoViewController())
-        present(vc, animated: true)
+        let vc = AddTodoViewController()
+        vc.delegate = self
+        let nav = UINavigationController(rootViewController: vc)
+        present(nav, animated: true)
     }
     
     @objc
@@ -138,7 +150,11 @@ extension MainListViewController: UICollectionViewDelegate, UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let vc = TodoListViewController()
-        if indexPath.item != 4 {
+        if indexPath.item == 0 {
+            vc.list = repository.fetchTodayList()
+        } else if indexPath.item == 1 {
+            vc.list = repository.fetchFutureList()
+        } else if indexPath.item == 2 {
             vc.list = repository.readDB()
         } else {
             vc.list = repository.fetchDoneList()
@@ -146,4 +162,10 @@ extension MainListViewController: UICollectionViewDelegate, UICollectionViewData
         navigationController?.pushViewController(vc, animated: true)
     }
     
+}
+
+extension MainListViewController: ModalViewDelegate {
+    func modalViewDismissed() {
+        fetchDB()
+    }
 }
