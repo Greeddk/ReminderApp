@@ -55,7 +55,7 @@ class TodoListViewController: BaseViewController {
     @objc
     private func checkButtonClicked(sender: UIButton) {
         repository.updateDoneValue(item: list[sender.tag])
-        mainView.tableView.reloadData()
+        mainView.tableView.reloadRows(at: [IndexPath(row: sender.tag, section: 0)], with: .automatic)
     }
     
     private func changePriorityString(priority: String, title: String) -> NSMutableAttributedString {
@@ -99,6 +99,8 @@ extension TodoListViewController: UITableViewDelegate, UITableViewDataSource {
         cell.memoLabel.text = row.memo
         if let image = loadImageFromDocument(filename: "\(row.id)") {
             cell.userImage.image = image
+        } else {
+            cell.userImage.image = nil
         }
         return cell
     }
