@@ -38,7 +38,8 @@ class MainListViewController: BaseViewController {
         super.viewDidLoad()
         icons[0] = changeDayIcon()
     }
-    
+
+    // ???: 데이터가 많을 때 아래처럼 fetchDB를 viewWillAppear에서 하는건 비효율적이라면 어디에다 해야할까요...?
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchDB()
