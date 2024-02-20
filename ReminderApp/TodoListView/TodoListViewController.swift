@@ -91,8 +91,13 @@ extension TodoListViewController: UITableViewDelegate, UITableViewDataSource {
         cell.checkButton.addTarget(self, action: #selector(checkButtonClicked(sender:)), for: .touchUpInside)
         cell.checkButton.tag = indexPath.row
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .light)
-        let image = row.done ? UIImage(systemName: "circle.fill", withConfiguration: imageConfig) : UIImage(systemName: "circle", withConfiguration: imageConfig)
-        cell.checkButton.setImage(image, for: .normal)
+        if row.done {
+            cell.checkButton.setImage(UIImage(systemName: "circle.inset.filled", withConfiguration: imageConfig), for: .normal)
+            cell.checkButton.tintColor = .systemBlue
+        } else {
+            cell.checkButton.setImage(UIImage(systemName: "circle", withConfiguration: imageConfig), for: .normal)
+            cell.checkButton.tintColor = .systemGray2
+        }
         let priority = row.priority
         let title = changePriorityString(priority: priority ?? "", title: row.title)
         cell.titleLabel.attributedText = title
