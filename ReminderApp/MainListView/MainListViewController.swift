@@ -30,6 +30,8 @@ class MainListViewController: BaseViewController {
     let repository = ReminderItemRepository()
     var counts: [Int] = [0,0,0,0,0]
     
+    var myReminderList: [String] = []
+    
     override func loadView() {
         self.view = mainView
     }
@@ -42,15 +44,16 @@ class MainListViewController: BaseViewController {
     // ???: 데이터가 많을 때 아래처럼 fetchDB를 viewWillAppear에서 하는건 비효율적이라면 어디에다 해야할까요...?
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        print(#function)
         fetchDB()
     }
     
     override func configureView() {
         configureToolbar()
         configureNavigationBar()
-        mainView.collectionView.delegate = self
-        mainView.collectionView.dataSource = self
-        mainView.collectionView.register(MainListCollectionViewCell.self, forCellWithReuseIdentifier: MainListCollectionViewCell.identifier)
+        mainView.tableView.delegate = self
+        mainView.tableView.dataSource = self
+        mainView.tableView.register(ReminderItemTypeTableViewCell.self, forCellReuseIdentifier: ReminderItemTypeTableViewCell.identifier)
         fetchDB()
         
     }
@@ -99,9 +102,9 @@ class MainListViewController: BaseViewController {
         counts[1] = futureList.count
         counts[2] = list.count
         counts[4] = doneList.count
-        mainView.collectionView.reloadData()
+        mainView.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
     }
-
+    
 }
 
 extension MainListViewController {
@@ -121,14 +124,43 @@ extension MainListViewController {
     
 }
 
-extension MainListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension MainListViewController: UITableViewDelegate, UITableViewDataSource {
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0{
+            return 1
+        } else {
+            return myReminderList.count
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: ReminderItemTypeTableViewCell.identifier, for: indexPath) as! ReminderItemTypeTableViewCell
+        cell.collectionView.register(ReminderItemTypeCollectionViewCell.self, forCellWithReuseIdentifier: ReminderItemTypeCollectionViewCell.identifier)
+        cell.collectionView.delegate = self
+        cell.collectionView.dataSource = self
+        cell.collectionView.reloadData()
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 300
+    }
+    
+}
+
+extension MainListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 5
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainListCollectionViewCell.identifier, for: indexPath) as! MainListCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReminderItemTypeCollectionViewCell.identifier, for: indexPath) as! ReminderItemTypeCollectionViewCell
         cell.imageView.image = UIImage(systemName: icons[indexPath.row])
         cell.circleView.backgroundColor = colors[indexPath.row]
         cell.titleLabel.text = titles[indexPath.row] 
@@ -137,6 +169,7 @@ extension MainListViewController: UICollectionViewDelegate, UICollectionViewData
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print(#function, indexPath)
         let vc = TodoListViewController()
         if indexPath.item == 0 {
             vc.list = repository.fetchTodayList()
@@ -154,6 +187,7 @@ extension MainListViewController: UICollectionViewDelegate, UICollectionViewData
 
 extension MainListViewController: ModalViewDelegate {
     func modalViewDismissed() {
+        print("돼쨔")
         fetchDB()
     }
 }

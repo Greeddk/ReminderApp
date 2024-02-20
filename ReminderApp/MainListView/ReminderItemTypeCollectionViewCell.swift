@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class MainListCollectionViewCell: UICollectionViewCell {
+class ReminderItemTypeCollectionViewCell: UICollectionViewCell {
     
     let backView = UIView()
     let circleView = UIView()

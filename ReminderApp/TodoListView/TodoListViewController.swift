@@ -23,6 +23,12 @@ class TodoListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        let vc = MainListViewController()
+        vc.mainView.tableView.reloadData()
+        
+    }
     
     override func configureView() {
         configureNavigationBar()
@@ -157,6 +163,6 @@ extension TodoListViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension TodoListViewController: ModalViewDelegate {
     func modalViewDismissed() {
-        mainView.tableView.reloadRows(at: [IndexPath(row: itemIndex, section: 0)], with: .none)
+        mainView.tableView.reloadRows(at: [IndexPath(row: itemIndex, section: 0)], with: .automatic)
     }
 }
