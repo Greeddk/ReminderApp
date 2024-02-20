@@ -92,8 +92,11 @@ extension TodoListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: TodoListTableViewCell.identifier, for: indexPath) as! TodoListTableViewCell
+        
         let row = list[indexPath.row]
+        
         cell.checkButton.addTarget(self, action: #selector(checkButtonClicked(sender:)), for: .touchUpInside)
         cell.checkButton.tag = indexPath.row
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .light)
@@ -104,17 +107,17 @@ extension TodoListViewController: UITableViewDelegate, UITableViewDataSource {
             cell.checkButton.setImage(UIImage(systemName: "circle", withConfiguration: imageConfig), for: .normal)
             cell.checkButton.tintColor = .systemGray2
         }
-        let priority = row.priority
-        let title = changePriorityString(priority: priority ?? "", title: row.title)
+        
+        let title = changePriorityString(priority: row.priority ?? "", title: row.title)
         cell.titleLabel.attributedText = title
         cell.memoLabel.text = row.memo
         if let date = row.dueDate {
             cell.dueDate.text = changeDateFormat(data: date)
         } else {
-            cell.dueDate.isHidden = true
+            cell.dueDate.text = ""
         }
         if let tag = row.tag {
-            cell.tagLabel.text = cell.dueDate.isHidden ? "#\(tag)" : "  #\(tag)"
+            cell.tagLabel.text = cell.dueDate.text == "" ? "#\(tag)" : "  #\(tag)"
         } else {
             cell.tagLabel.text = ""
         }
