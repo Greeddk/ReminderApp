@@ -14,6 +14,7 @@ class TodoListViewController: BaseViewController {
     
     var list: Results<ReminderItem>!
     let repository = ReminderItemRepository()
+    var itemIndex = 0
     
     override func loadView() {
         self.view = mainView
@@ -143,4 +144,19 @@ extension TodoListViewController: UITableViewDelegate, UITableViewDataSource {
         return UISwipeActionsConfiguration(actions: [delete])
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = AddTodoViewController(type: .modify)
+        vc.item = list[indexPath.row]
+        vc.delegate = self
+        itemIndex = indexPath.row
+        let nav = UINavigationController(rootViewController: vc)
+        present(nav, animated: true)
+    }
+    
+}
+
+extension TodoListViewController: ModalViewDelegate {
+    func modalViewDismissed() {
+        mainView.tableView.reloadRows(at: [IndexPath(row: itemIndex, section: 0)], with: .none)
+    }
 }

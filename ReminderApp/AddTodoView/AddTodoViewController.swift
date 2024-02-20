@@ -14,10 +14,26 @@ protocol PassDataDelegate {
 
 class AddTodoViewController: BaseViewController {
     
+    enum ViewType {
+        case add
+        case modify
+        
+        var buttonTitle: String {
+            switch self {
+            case .add:
+                return "추가"
+            case .modify:
+                return "수정"
+            }
+        }
+    }
+    
     let mainView = AddTodoView()
     let pickedImageView = UIImageView()
     
     let repository = ReminderItemRepository()
+    var item: ReminderItem?
+    var viewType: ViewType = .add
     
     var delegate: ModalViewDelegate?
     
@@ -29,6 +45,11 @@ class AddTodoViewController: BaseViewController {
     var priority: String?
     var image = UIImage()
     
+    convenience init(type: ViewType) {
+        self.init()
+        self.viewType = type
+    }
+    
     override func loadView() {
         self.view = mainView
     }
@@ -37,16 +58,20 @@ class AddTodoViewController: BaseViewController {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(passData), name: NSNotification.Name("priority"), object: nil)
         
+        if viewType == .modify {
+            guard let item = item else { return }
+            todoTitle = item.title
+            memo = item.memo
+            dueDate = item.dueDate
+            tagText = item.tag
+            priority = item.priority
+            pickedImageView.image = loadImageFromDocument(filename: "\(item.id)")
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         view.endEditing(true)
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        delegate?.modalViewDismissed()
     }
     
     override func configureView() {
@@ -62,8 +87,12 @@ class AddTodoViewController: BaseViewController {
         navigationController?.isNavigationBarHidden = false
         navigationItem.title = "새로운 할 일"
         let cancelButton = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(dismissModalView))
-        let addButton = UIBarButtonItem(title: "추가", style: .plain, target: self, action: #selector(addButtonClicked))
-        addButton.isEnabled = false
+        let addButton = UIBarButtonItem(title: viewType.buttonTitle, style: .plain, target: self, action: #selector(addButtonClicked))
+        if viewType == .add {
+            addButton.isEnabled = false
+        } else {
+            addButton.isEnabled = true
+        }
         navigationItem.leftBarButtonItem = cancelButton
         navigationItem.rightBarButtonItem = addButton
     }
@@ -79,9 +108,22 @@ extension AddTodoViewController {
     
     @objc
     private func addButtonClicked() {
-        let item = ReminderItem(title: todoTitle, memo: memo, dueDate: dueDate, tag: tagText, priority: priority)
-        repository.createItem(item)
-        saveImageToDocument(image: image, filename: "\(item.id)")
+        if viewType == .add {
+            let item = ReminderItem(title: todoTitle, memo: memo, dueDate: dueDate, tag: tagText, priority: priority)
+            repository.createItem(item)
+            if let image = pickedImageView.image {
+                saveImageToDocument(image: image, filename: "\(item.id)")
+            }
+        } else {
+            guard let item = item else { return }
+            repository.updateItem(id: item.id, title: todoTitle, memo: memo, dueDate: dueDate, tag: tagText, priority: priority)
+            removeImageFromDocument(filename: "\(item.id)")
+            if let image = pickedImageView.image {
+                saveImageToDocument(image: image, filename: "\(item.id)")
+            }
+        }
+        
+        delegate?.modalViewDismissed()
         dismiss(animated: true)
     }
     
@@ -154,12 +196,14 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
             if indexPath.row == 0 {
                 let titleTextField = UITextField()
                 titleTextField.placeholder = "제목"
-                titleTextField.becomeFirstResponder()
                 titleTextField.delegate = self
                 cell.contentView.addSubview(titleTextField)
                 titleTextField.snp.makeConstraints { make in
                     make.top.equalToSuperview().offset(12)
                     make.leading.equalToSuperview().offset(16)
+                }
+                if viewType == .modify {
+                    titleTextField.text = todoTitle
                 }
                 return cell
             } else {
@@ -176,6 +220,15 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
                     make.leading.equalToSuperview().offset(12)
                     make.trailing.equalToSuperview().offset(8)
                     make.bottom.equalToSuperview()
+                }
+                if viewType == .modify {
+                    if memo != nil {
+                        memoTextView.text = memo
+                        memoTextView.textColor = .white
+                    } else {
+                        memoTextView.text = "메모"
+                        memoTextView.textColor = .systemGray2
+                    }
                 }
                 return cell
             }
@@ -241,7 +294,7 @@ extension AddTodoViewController: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         if textView.textColor == .systemGray2 {
-            memo = ""
+            
         } else {
             memo = textView.text!
         }
