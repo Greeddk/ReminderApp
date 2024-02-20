@@ -15,6 +15,7 @@ protocol PassDataDelegate {
 class AddTodoViewController: BaseViewController {
     
     let mainView = AddTodoView()
+    let pickedImageView = UIImageView()
     
     let repository = ReminderItemRepository()
     
@@ -106,7 +107,7 @@ extension AddTodoViewController {
 extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 5
+        return 6
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -121,7 +122,15 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
         
-        if indexPath.section != 0 {
+        if indexPath.section == 5 {
+            cell.contentView.addSubview(pickedImageView)
+            pickedImageView.snp.makeConstraints { make in
+                make.centerX.equalTo(cell.contentView)
+                make.size.equalTo(300)
+            }
+            cell.backgroundColor = .clear
+            return cell
+        } else if indexPath.section != 0 {
             var content = cell.defaultContentConfiguration()
             content.text = cellText[indexPath.section]
             content.textProperties.color = .white
@@ -137,9 +146,6 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
             } else if indexPath.section == 3 {
                 content.secondaryText = changePriorityToString(priority: priority ?? "")
                 content.secondaryTextProperties.font = .systemFont(ofSize: 10)
-            } else {
-                
-                
             }
             cell.contentConfiguration = content
             cell.accessoryType = .disclosureIndicator
@@ -209,6 +215,8 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
             } else {
                 return 120
             }
+        } else if indexPath.section == 5 {
+            return 300
         } else {
             return 55
         }
@@ -270,7 +278,7 @@ extension AddTodoViewController: UIImagePickerControllerDelegate, UINavigationCo
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            self.image = pickedImage
+            self.pickedImageView.image = pickedImage
         }
         dismiss(animated: true)
     }

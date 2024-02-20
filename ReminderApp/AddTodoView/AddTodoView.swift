@@ -29,5 +29,6 @@ class AddTodoView: BaseView {
             make.horizontalEdges.bottom.equalTo(self.safeAreaLayoutGuide)
             make.top.equalTo(self).offset(-24)
         }
+        
     }
 }
