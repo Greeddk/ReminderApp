@@ -8,6 +8,12 @@
 import UIKit
 
 extension UIViewController {
+    
+    func changeDateFormat(data: Date) -> String{
+        let targetFormat = DateFormatter()
+        targetFormat.dateFormat = "yyyy.M.d. a HH:mm"
+        return targetFormat.string(from: data)
+    }
 
     func saveImageToDocument(image: UIImage, filename: String) {
         guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }

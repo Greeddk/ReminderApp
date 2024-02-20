@@ -28,6 +28,7 @@ class TodoListViewController: BaseViewController {
         mainView.tableView.delegate = self
         mainView.tableView.dataSource = self
         mainView.tableView.register(TodoListTableViewCell.self, forCellReuseIdentifier: TodoListTableViewCell.identifier)
+        mainView.tableView.rowHeight = UITableView.automaticDimension
     }
     
     private func configureNavigationBar() {
@@ -55,7 +56,7 @@ class TodoListViewController: BaseViewController {
     @objc
     private func checkButtonClicked(sender: UIButton) {
         repository.updateDoneValue(item: list[sender.tag])
-        mainView.tableView.reloadRows(at: [IndexPath(row: sender.tag, section: 0)], with: .automatic)
+        mainView.tableView.reloadData()
     }
     
     private func changePriorityString(priority: String, title: String) -> NSMutableAttributedString {
@@ -71,7 +72,12 @@ class TodoListViewController: BaseViewController {
             text = ""
         }
         
-        let fullText = text + " " + title
+        var fullText = ""
+        if text == "" {
+            fullText = title
+        } else {
+            fullText = text + " " + title
+        }
         let attribtuedString = NSMutableAttributedString(string: fullText)
         let range = (fullText as NSString).range(of: text)
         attribtuedString.addAttribute(.foregroundColor, value: UIColor.systemBlue, range: range)
@@ -102,6 +108,16 @@ extension TodoListViewController: UITableViewDelegate, UITableViewDataSource {
         let title = changePriorityString(priority: priority ?? "", title: row.title)
         cell.titleLabel.attributedText = title
         cell.memoLabel.text = row.memo
+        if let date = row.dueDate {
+            cell.dueDate.text = changeDateFormat(data: date)
+        } else {
+            cell.dueDate.isHidden = true
+        }
+        if let tag = row.tag {
+            cell.tagLabel.text = cell.dueDate.isHidden ? "#\(tag)" : "  #\(tag)"
+        } else {
+            cell.tagLabel.text = ""
+        }
         if let image = loadImageFromDocument(filename: "\(row.id)") {
             cell.userImage.image = image
         } else {
@@ -111,7 +127,7 @@ extension TodoListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
+        return 70
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

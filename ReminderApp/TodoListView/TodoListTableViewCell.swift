@@ -16,7 +16,6 @@ class TodoListTableViewCell: UITableViewCell {
     let stackView = UIStackView()
     let dueDate = UILabel()
     let tagLabel = UILabel()
-    let priority = UILabel()
     let userImage = UIImageView()
     
 
@@ -33,29 +32,40 @@ class TodoListTableViewCell: UITableViewCell {
     
     func configureHierarchy() {
         contentView.addSubViews([checkButton, titleLabel, memoLabel, stackView, userImage])
-        stackView.addSubViews([dueDate, tagLabel, priority])
+        stackView.addSubViews([dueDate, tagLabel])
     }
     
     func configureLayout() {
         checkButton.snp.makeConstraints { make in
-            make.top.equalTo(contentView.safeAreaLayoutGuide).offset(4)
+            make.top.equalTo(contentView.safeAreaLayoutGuide)
             make.leading.equalTo(contentView.safeAreaLayoutGuide).offset(16)
             make.size.equalTo(40)
         }
         
         titleLabel.snp.makeConstraints { make in
             make.centerY.equalTo(checkButton)
-            make.leading.equalTo(checkButton.snp.trailing).offset(10)
+            make.leading.equalTo(checkButton.snp.trailing).offset(4)
         }
         
         memoLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(4)
+            make.top.equalTo(titleLabel.snp.bottom)
             make.leading.equalTo(titleLabel)
         }
         
         stackView.snp.makeConstraints { make in
             make.top.equalTo(memoLabel.snp.bottom).offset(2)
             make.leading.equalTo(titleLabel)
+        }
+        
+        dueDate.snp.makeConstraints { make in
+            make.top.equalTo(stackView)
+            make.leading.equalTo(stackView)
+        }
+        
+        tagLabel.snp.makeConstraints { make in
+            make.top.equalTo(stackView)
+            make.leading.equalTo(dueDate.snp.trailing)
+
         }
         
         userImage.snp.makeConstraints { make in
@@ -66,18 +76,15 @@ class TodoListTableViewCell: UITableViewCell {
     }
     
     func configureView() {
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .light)
-        let image = UIImage(systemName: "circle", withConfiguration: imageConfig)
-        checkButton.setImage(image, for: .normal)
-        checkButton.tintColor = .systemGray2
-        checkButton.scalesLargeContentImage = true
         titleLabel.textColor = .white
         memoLabel.textColor = .systemGray2
+        memoLabel.font = .systemFont(ofSize: 14)
         stackView.axis = .horizontal
         stackView.distribution = .fill
+        dueDate.font = .systemFont(ofSize: 14)
+        dueDate.textColor = .systemGray2
+        tagLabel.font = .systemFont(ofSize: 14)
+        tagLabel.textColor = .systemCyan
     }
     
-    private func changeDateFormat(date: Date) {
-        
-    }
 }

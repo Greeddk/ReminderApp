@@ -92,12 +92,6 @@ extension AddTodoViewController {
         }
     }
     
-    private func changeDateFormat(data: Date) -> String{
-        let targetFormat = DateFormatter()
-        targetFormat.dateFormat = "yyyy.M.d. a HH:mm"
-        return targetFormat.string(from: data)
-    }
-    
     private func changePriorityToString(priority: String) -> String {
         switch priority {
         case "0": return "상"

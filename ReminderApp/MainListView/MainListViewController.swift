@@ -33,7 +33,7 @@ class MainListViewController: BaseViewController {
     override func loadView() {
         self.view = mainView
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         icons[0] = changeDayIcon()
@@ -58,19 +58,6 @@ class MainListViewController: BaseViewController {
         navigationItem.title = "전체"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.backButtonDisplayMode = .minimal
-        let menu = UIMenu(children: [
-            UIAction(title: "마감일 순", handler: { _ in
-                self.list = self.repository.sortItem("dueDate")
-            }),
-            UIAction(title: "제목 순", handler: { _ in
-                self.list = self.repository.sortItem("title")
-            }),
-            UIAction(title: "우선순위 낮은 순", handler: { _ in
-                self.list = self.repository.sortItem("priority")
-            })
-        ])
-        let moreButton =  UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), menu: menu)
-        navigationItem.rightBarButtonItem = moreButton
     }
     
     private func configureToolbar() {
