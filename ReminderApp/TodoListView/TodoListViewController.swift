@@ -166,7 +166,11 @@ extension TodoListViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension TodoListViewController: ModalViewDelegate {
-    func modalViewDismissed() {
+    func fetchLists() {
+        
+    }
+    
+    func fetchReminderItem() {
         mainView.tableView.reloadRows(at: [IndexPath(row: itemIndex, section: 0)], with: .automatic)
     }
 }

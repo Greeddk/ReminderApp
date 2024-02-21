@@ -41,7 +41,7 @@ extension AddListModalViewController {
     private func addButtonClicked() {
         let new = MyList(name: mainView.listNameTextField.text ?? "이름 미정", regDate: Date())
         repository.createList(new)
-        delegate?.modalViewDismissed()
+        delegate?.fetchLists()
         dismiss(animated: true)
     }
     

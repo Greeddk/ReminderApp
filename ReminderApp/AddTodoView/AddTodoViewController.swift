@@ -131,7 +131,7 @@ extension AddTodoViewController {
             }
         }
         
-        delegate?.modalViewDismissed()
+        delegate?.fetchReminderItem()
         dismiss(animated: true)
     }
     

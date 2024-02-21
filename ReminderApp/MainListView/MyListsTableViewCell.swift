@@ -32,7 +32,7 @@ class MyListsTableViewCell: BaseTableViewCell {
     
     override func configureLayout() {
         backView.snp.makeConstraints { make in
-            make.verticalEdges.equalToSuperview().inset(2)
+            make.verticalEdges.equalToSuperview().inset(4)
             make.horizontalEdges.equalToSuperview().inset(12)
         }
         

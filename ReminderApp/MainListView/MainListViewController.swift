@@ -9,7 +9,8 @@ import UIKit
 import RealmSwift
 
 protocol ModalViewDelegate {
-    func modalViewDismissed()
+    func fetchReminderItem()
+    func fetchLists()
 }
 
 class MainListViewController: BaseViewController {
@@ -43,7 +44,7 @@ class MainListViewController: BaseViewController {
     // ???: 데이터가 많을 때 아래처럼 fetchDB를 viewWillAppear에서 하는건 비효율적이라면 어디에다 해야할까요...?
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        fetchDB()
+        fetchCollectionView()
     }
     
     override func configureView() {
@@ -54,7 +55,8 @@ class MainListViewController: BaseViewController {
         mainView.tableView.dataSource = self
         mainView.tableView.register(ReminderItemTypeTableViewCell.self, forCellReuseIdentifier: ReminderItemTypeTableViewCell.identifier)
         mainView.tableView.register(MyListsTableViewCell.self, forCellReuseIdentifier: MyListsTableViewCell.identifier)
-        fetchDB()
+        fetchCollectionView()
+        fetchMyList()
     }
     
     private func configureNavigationBar() {
@@ -88,21 +90,24 @@ class MainListViewController: BaseViewController {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd"
         let result = dateFormatter.string(from: Date())
-        
         return result + ".square"
     }
     
-    private func fetchDB() {
+    private func fetchCollectionView() {
         todayTodoList = repository.fetchTodayList()
         futureTodoList = repository.fetchFutureList()
         allTodoList = repository.readReminderItem()
         doneTodoList = repository.fetchDoneList()
-        myReminderLists = repository.readMyLists()
         counts[0] = todayTodoList.count
         counts[1] = futureTodoList.count
         counts[2] = allTodoList.count
         counts[4] = doneTodoList.count
         mainView.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+    }
+    
+    private func fetchMyList() {
+        myReminderLists = repository.readMyLists()
+        mainView.tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
     }
     
 }
@@ -120,6 +125,7 @@ extension MainListViewController {
     @objc
     private func addListButtonClicked() {
         let vc = AddListModalViewController()
+        vc.delegate = self
         let nav = UINavigationController(rootViewController: vc)
         present(nav, animated: true)
     }
@@ -157,6 +163,7 @@ extension MainListViewController: UITableViewDelegate, UITableViewDataSource {
             cell.titleLabel.text = row.name
             cell.countLabel.text = "\(row.reminderItemList.count)"
             return cell
+            
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReminderItemTypeTableViewCell.identifier, for: indexPath) as! ReminderItemTypeTableViewCell
             return cell
@@ -168,7 +175,7 @@ extension MainListViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.section == 0 {
             return 290
         } else {
-            return 50
+            return 55
         }
     }
     
@@ -224,8 +231,12 @@ extension MainListViewController: UICollectionViewDelegate, UICollectionViewData
 }
 
 extension MainListViewController: ModalViewDelegate {
-    func modalViewDismissed() {
-        fetchDB()
+    func fetchReminderItem() {
+        fetchCollectionView()
+    }
+    
+    func fetchLists() {
+        fetchMyList()
     }
 }
 
