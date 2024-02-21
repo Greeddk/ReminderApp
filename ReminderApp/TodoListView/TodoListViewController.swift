@@ -16,6 +16,7 @@ class TodoListViewController: BaseViewController {
     var list: Results<ReminderItem>!
     let repository = ReminderItemRepository()
     var itemIndex = 0
+    var navigationTitle: String?
     
     override func loadView() {
         self.view = mainView
@@ -24,15 +25,7 @@ class TodoListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
     }
-    
-//    override func viewWillDisappear(_ animated: Bool) {
-//        super.viewWillDisappear(animated)
-//        let vc = MainListViewController()
-//        vc.mainView.tableView.reloadData()
-//        
-//    }
     
     override func configureView() {
         configureNavigationBar()
@@ -43,7 +36,7 @@ class TodoListViewController: BaseViewController {
     }
     
     private func configureNavigationBar() {
-        navigationItem.title = "전체"
+        navigationItem.title = navigationTitle
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.systemBlue]
         let menu = UIMenu(children: [

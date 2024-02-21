@@ -45,6 +45,7 @@ class MainListViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchCollectionView()
+        fetchMyList()
     }
     
     override func configureView() {
@@ -55,8 +56,7 @@ class MainListViewController: BaseViewController {
         mainView.tableView.dataSource = self
         mainView.tableView.register(ReminderItemTypeTableViewCell.self, forCellReuseIdentifier: ReminderItemTypeTableViewCell.identifier)
         mainView.tableView.register(MyListsTableViewCell.self, forCellReuseIdentifier: MyListsTableViewCell.identifier)
-        fetchCollectionView()
-        fetchMyList()
+
     }
     
     private func configureNavigationBar() {
@@ -189,6 +189,7 @@ extension MainListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 1 {
             let vc = TodoListViewController()
+            vc.navigationTitle = myReminderLists[indexPath.row].name
             vc.list = repository.readReminderItem().where {
                 $0.folder.name == myReminderLists[indexPath.row].name
             }
@@ -230,6 +231,7 @@ extension MainListViewController: UICollectionViewDelegate, UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let vc = TodoListViewController()
+        vc.navigationTitle = titles[indexPath.item]
         if indexPath.item == 0 {
             vc.list = repository.fetchTodayList()
         } else if indexPath.item == 1 {

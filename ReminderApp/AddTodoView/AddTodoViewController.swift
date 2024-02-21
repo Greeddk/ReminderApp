@@ -134,6 +134,7 @@ extension AddTodoViewController {
         }
         
         delegate?.fetchReminderItem()
+        delegate?.fetchLists()
         dismiss(animated: true)
     }
     
