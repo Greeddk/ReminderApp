@@ -35,6 +35,8 @@
 		4268C4102B84B0AF00826885 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4268C40F2B84B0AF00826885 /* SnapKit */; };
 		4268C4122B84BCB800826885 /* ReminderItemTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4268C4112B84BCB800826885 /* ReminderItemTypeTableViewCell.swift */; };
 		4268C4142B84BD0700826885 /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4268C4132B84BD0700826885 /* BaseTableViewCell.swift */; };
+		4268C41A2B84C59100826885 /* AddListModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4268C4192B84C59100826885 /* AddListModalViewController.swift */; };
+		4268C41C2B84C5B700826885 /* AddListModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4268C41B2B84C5B700826885 /* AddListModalView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +67,8 @@
 		4242338C2B838C550087636D /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		4268C4112B84BCB800826885 /* ReminderItemTypeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderItemTypeTableViewCell.swift; sourceTree = "<group>"; };
 		4268C4132B84BD0700826885 /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
+		4268C4192B84C59100826885 /* AddListModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddListModalViewController.swift; sourceTree = "<group>"; };
+		4268C41B2B84C5B700826885 /* AddListModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddListModalView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +138,8 @@
 				4242334F2B7C95300087636D /* MainListView.swift */,
 				4268C4112B84BCB800826885 /* ReminderItemTypeTableViewCell.swift */,
 				424233562B7CA2470087636D /* ReminderItemTypeCollectionViewCell.swift */,
+				4268C4192B84C59100826885 /* AddListModalViewController.swift */,
+				4268C41B2B84C5B700826885 /* AddListModalView.swift */,
 			);
 			path = MainListView;
 			sourceTree = "<group>";
@@ -280,7 +286,9 @@
 				424233352B7C91380087636D /* AppDelegate.swift in Sources */,
 				4242335E2B7CA9680087636D /* AddTodoView.swift in Sources */,
 				424233592B7CA3310087636D /* AddTodoViewController.swift in Sources */,
+				4268C41C2B84C5B700826885 /* AddListModalView.swift in Sources */,
 				424233522B7C95460087636D /* BaseView.swift in Sources */,
+				4268C41A2B84C59100826885 /* AddListModalViewController.swift in Sources */,
 				4242334D2B7C92580087636D /* MainListViewController.swift in Sources */,
 				424233372B7C91380087636D /* SceneDelegate.swift in Sources */,
 				4268C4122B84BCB800826885 /* ReminderItemTypeTableViewCell.swift in Sources */,

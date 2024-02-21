@@ -44,7 +44,6 @@ class MainListViewController: BaseViewController {
     // ???: 데이터가 많을 때 아래처럼 fetchDB를 viewWillAppear에서 하는건 비효율적이라면 어디에다 해야할까요...?
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print(#function)
         fetchDB()
     }
     
@@ -55,7 +54,6 @@ class MainListViewController: BaseViewController {
         mainView.tableView.dataSource = self
         mainView.tableView.register(ReminderItemTypeTableViewCell.self, forCellReuseIdentifier: ReminderItemTypeTableViewCell.identifier)
         fetchDB()
-        
     }
     
     private func configureNavigationBar() {
@@ -119,7 +117,9 @@ extension MainListViewController {
     
     @objc
     private func addListButtonClicked() {
-        
+        let vc = AddListModalViewController()
+        let nav = UINavigationController(rootViewController: vc)
+        present(nav, animated: true)
     }
     
 }
@@ -131,7 +131,7 @@ extension MainListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0{
+        if section == 0 {
             return 1
         } else {
             return myReminderList.count
@@ -169,7 +169,6 @@ extension MainListViewController: UICollectionViewDelegate, UICollectionViewData
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(#function, indexPath)
         let vc = TodoListViewController()
         if indexPath.item == 0 {
             vc.list = repository.fetchTodayList()
@@ -187,7 +186,6 @@ extension MainListViewController: UICollectionViewDelegate, UICollectionViewData
 
 extension MainListViewController: ModalViewDelegate {
     func modalViewDismissed() {
-        print("돼쨔")
         fetchDB()
     }
 }
