@@ -46,7 +46,7 @@ class AddTodoViewController: BaseViewController {
     var tagText: String?
     var priority: String?
     var image = UIImage()
-    var selectedListIndex: Int?
+    var selectedListIndex: Int = 0
     
     convenience init(type: ViewType) {
         self.init()
@@ -62,7 +62,6 @@ class AddTodoViewController: BaseViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(passData), name: NSNotification.Name("priority"), object: nil)
         
         list = repository.readMyLists()
-        print(list)
         
         if viewType == .modify {
             guard let item = item else { return }
@@ -72,6 +71,8 @@ class AddTodoViewController: BaseViewController {
             tagText = item.tag
             priority = item.priority
             pickedImageView.image = loadImageFromDocument(filename: "\(item.id)")
+            guard let index = item.folder.first else { return }
+            selectedListIndex = list.firstIndex(of: index) ?? 0
         }
     }
     
@@ -116,15 +117,16 @@ extension AddTodoViewController {
     
     @objc
     private func addButtonClicked() {
+        let selectedList = list[selectedListIndex]
         if viewType == .add {
             let item = ReminderItem(title: todoTitle, memo: memo, dueDate: dueDate, tag: tagText, priority: priority)
-            repository.createItem(item)
+            repository.createItem(selectedList, item: item)
             if let image = pickedImageView.image {
                 saveImageToDocument(image: image, filename: "\(item.id)")
             }
         } else {
             guard let item = item else { return }
-            repository.updateItem(id: item.id, title: todoTitle, memo: memo, dueDate: dueDate, tag: tagText, priority: priority)
+            repository.updateItem(id: item.id, title: todoTitle, memo: memo, dueDate: dueDate, tag: tagText, priority: priority, list: selectedList)
             removeImageFromDocument(filename: "\(item.id)")
             if let image = pickedImageView.image {
                 saveImageToDocument(image: image, filename: "\(item.id)")
@@ -269,7 +271,9 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
             vc.list = list
             vc.pickedIndex = { index in
                 self.selectedListIndex = index
+                tableView.reloadSections([indexPath.section], with: .automatic)
             }
+            vc.selectedListName = list[selectedListIndex ?? 0].name
             navigationController?.pushViewController(vc, animated: true)
         }
         

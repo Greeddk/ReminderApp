@@ -12,6 +12,7 @@ import RealmSwift
 class SelectListViewController: BaseViewController {
     
     var list: Results<MyList>!
+    var selectedListName: String!
     let tableView = UITableView()
     var pickedIndex: ((Int) -> Void)?
 
@@ -47,13 +48,19 @@ extension SelectListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier)!
-        cell.textLabel?.text = list[indexPath.row].name
-        cell.accessoryType = .checkmark
+        let row = list[indexPath.row]
+        cell.textLabel?.text = row.name
+        if selectedListName == list[indexPath.row].name {
+            cell.accessoryType = .checkmark
+        } else {
+            cell.accessoryType = .none
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         pickedIndex?(indexPath.row)
+        navigationController?.popViewController(animated: true)
     }
     
 }

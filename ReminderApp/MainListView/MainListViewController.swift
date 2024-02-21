@@ -190,7 +190,7 @@ extension MainListViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.section == 1 {
             let vc = TodoListViewController()
             vc.list = repository.readReminderItem().where {
-                $0.superList.name == myReminderLists[indexPath.section].name
+                $0.folder.name == myReminderLists[indexPath.section].name
             }
         }
         

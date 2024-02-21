@@ -10,8 +10,8 @@ import RealmSwift
 
 protocol DBProtocol {
     func createList(_ list: MyList)
-    func createItem(_ item: ReminderItem)
-    func updateItem(id: ObjectId, title: String, memo: String?, dueDate: Date?, tag: String?, priority: String?)
+    func createItem(_ list: MyList, item: ReminderItem)
+    func updateItem(id: ObjectId, title: String, memo: String?, dueDate: Date?, tag: String?, priority: String?, list: MyList)
     func updateDoneValue(item: ReminderItem)
     func readReminderItem() -> Results<ReminderItem>
     func readMyLists() -> Results<MyList>
@@ -40,20 +40,20 @@ class ReminderItemRepository: DBProtocol {
         }
     }
     
-    func createItem(_ item: ReminderItem) {
+    func createItem(_ list: MyList, item: ReminderItem) {
         do {
             try realm.write {
-                realm.add(item)
+                list.reminderItemList.append(item)
             }
         } catch {
             print("create Error", error)
         }
     }
-    
-    func updateItem(id: ObjectId, title: String, memo: String?, dueDate: Date?, tag: String?, priority: String?) {
+    // ???: LinkingObjects는 변경이 불가능하나요?
+    func updateItem(id: ObjectId, title: String, memo: String?, dueDate: Date?, tag: String?, priority: String?, list: MyList) {
         do {
             try realm.write {
-                realm.create(ReminderItem.self, value: ["id": id, "title": title, "memo": memo, "dueDate": dueDate, "tag": tag, "priority": priority], update: .modified)
+                realm.create(ReminderItem.self, value: ["id": id, "title": title, "memo": memo, "dueDate": dueDate, "tag": tag, "priority": priority, "folder": list], update: .modified)
             }
         } catch {
             print(error)

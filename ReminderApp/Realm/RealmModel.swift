@@ -29,7 +29,7 @@ class ReminderItem: Object {
     @Persisted var tag: String?
     @Persisted var priority: String?
     @Persisted var done: Bool
-    @Persisted(originProperty: "reminderItemList") var superList: LinkingObjects<MyList>
+    @Persisted(originProperty: "reminderItemList") var folder: LinkingObjects<MyList>
     
     convenience init(title: String, memo: String? = nil, dueDate: Date? = nil, tag: String? = nil, priority: String? = nil) {
         self.init()

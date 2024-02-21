@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             repository.createList(list)
         }
         
-        let configuration = Realm.Configuration(schemaVersion: 2) { migration,oldSchemaVersion in
+        let configuration = Realm.Configuration(schemaVersion: 3) { migration,oldSchemaVersion in
             
             //1: reminderItem -> reminderItemList로 이름 변경
             if oldSchemaVersion < 1 {
@@ -33,6 +33,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             //2: ReminderItem에 LinkingObject 추가 // 따로 코드 작업은 필요하지 않음
             if oldSchemaVersion < 2 {
                 print("Version: 1 -> 2")
+            }
+            
+            //3: superList를 folder로 이름 변경
+            if oldSchemaVersion < 3 {
+                migration.renameProperty(onType: "ReminderItem", from: "superList", to: "folder")
+                print("Version: 2 -> 3")
             }
             
         }
