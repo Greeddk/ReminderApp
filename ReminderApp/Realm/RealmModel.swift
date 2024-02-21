@@ -8,6 +8,19 @@
 import Foundation
 import RealmSwift
 
+class MyList: Object {
+    @Persisted(primaryKey: true) var id: ObjectId
+    @Persisted var name: String
+    @Persisted var regDate: Date
+    @Persisted var reminderItemList: List<ReminderItem>
+    
+    convenience init(name: String, regDate: Date) {
+        self.init()
+        self.name = name
+        self.regDate = regDate
+    }
+}
+
 class ReminderItem: Object {
     @Persisted(primaryKey: true) var id: ObjectId //아이디
     @Persisted var title: String
@@ -16,6 +29,7 @@ class ReminderItem: Object {
     @Persisted var tag: String?
     @Persisted var priority: String?
     @Persisted var done: Bool
+    @Persisted(originProperty: "reminderItemList") var superList: LinkingObjects<MyList>
     
     convenience init(title: String, memo: String? = nil, dueDate: Date? = nil, tag: String? = nil, priority: String? = nil) {
         self.init()

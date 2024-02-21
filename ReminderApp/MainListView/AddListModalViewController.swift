@@ -10,6 +10,10 @@ import UIKit
 class AddListModalViewController: BaseViewController {
     
     let mainView = AddListModalView()
+    
+    let repository = ReminderItemRepository()
+    
+    var delegate: ModalViewDelegate?
 
     override func loadView() {
         self.view = mainView
@@ -35,7 +39,10 @@ extension AddListModalViewController {
     
     @objc
     private func addButtonClicked() {
-        
+        let new = MyList(name: mainView.listNameTextField.text ?? "이름 미정", regDate: Date())
+        repository.createList(new)
+        delegate?.modalViewDismissed()
+        dismiss(animated: true)
     }
     
     @objc

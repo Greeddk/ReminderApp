@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import RealmSwift
 
 protocol PassDataDelegate {
     func tagReciever(text: String)
@@ -32,18 +33,20 @@ class AddTodoViewController: BaseViewController {
     let pickedImageView = UIImageView()
     
     let repository = ReminderItemRepository()
+    var list: Results<MyList>!
     var item: ReminderItem?
     var viewType: ViewType = .add
     
     var delegate: ModalViewDelegate?
     
-    let cellText: [String] = ["", "마감일", "태그", "우선 순위", "이미지 추가"]
+    let cellText: [String] = ["", "마감일", "태그", "우선 순위", "이미지 추가", "목록"]
     var todoTitle: String = ""
     var memo: String?
     var dueDate: Date?
     var tagText: String?
     var priority: String?
     var image = UIImage()
+    var selectedListIndex: Int?
     
     convenience init(type: ViewType) {
         self.init()
@@ -57,6 +60,9 @@ class AddTodoViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(passData), name: NSNotification.Name("priority"), object: nil)
+        
+        list = repository.readMyLists()
+        print(list)
         
         if viewType == .modify {
             guard let item = item else { return }
@@ -81,6 +87,7 @@ class AddTodoViewController: BaseViewController {
         mainView.tableView.delegate = self
         mainView.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
         mainView.tableView.register(TodoOptionTableViewCell.self, forCellReuseIdentifier: TodoOptionTableViewCell.identifier)
+        mainView.tableView.register(MyListsTableViewCell.self, forCellReuseIdentifier: MyListsTableViewCell.identifier)
         mainView.tableView.sectionFooterHeight = 0
     }
     
@@ -150,7 +157,7 @@ extension AddTodoViewController {
 extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 5
+        return 6
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -210,8 +217,8 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
         } else {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: TodoOptionTableViewCell.identifier, for: indexPath) as! TodoOptionTableViewCell
-            
             cell.cellTitle.text = cellText[indexPath.section]
+            
             if indexPath.section == 1 {
                 if let date = dueDate {
                     cell.subTitle.text = changeDateFormat(data: date)
@@ -228,8 +235,10 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.pickedImage.image = pickedImageView.image
                 return cell
             } else {
+                cell.subTitle.text = list[selectedListIndex ?? 0].name
                 return cell
             }
+            
         }
         
     }
@@ -255,6 +264,13 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
             let vc = UIImagePickerController()
             vc.delegate = self
             present(vc, animated: true)
+        } else if indexPath.section == 5 {
+            let vc = SelectListViewController()
+            vc.list = list
+            vc.pickedIndex = { index in
+                self.selectedListIndex = index
+            }
+            navigationController?.pushViewController(vc, animated: true)
         }
         
     }
@@ -266,8 +282,6 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
             } else {
                 return 120
             }
-        } else if indexPath.section == 5 {
-            return 300
         } else {
             return 55
         }

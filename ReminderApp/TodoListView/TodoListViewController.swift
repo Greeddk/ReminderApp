@@ -12,6 +12,7 @@ class TodoListViewController: BaseViewController {
     
     let mainView = TodoListView()
     
+    var myList: MyList?
     var list: Results<ReminderItem>!
     let repository = ReminderItemRepository()
     var itemIndex = 0
@@ -22,13 +23,16 @@ class TodoListViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-    }
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        let vc = MainListViewController()
-        vc.mainView.tableView.reloadData()
+
         
     }
+    
+//    override func viewWillDisappear(_ animated: Bool) {
+//        super.viewWillDisappear(animated)
+//        let vc = MainListViewController()
+//        vc.mainView.tableView.reloadData()
+//        
+//    }
     
     override func configureView() {
         configureNavigationBar()

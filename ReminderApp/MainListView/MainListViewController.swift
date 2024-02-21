@@ -23,14 +23,14 @@ class MainListViewController: BaseViewController {
     var icons = ["13.square", "calendar", "tray.fill", "flag.fill", "checkmark"]
     let colors: [UIColor] = [.systemBlue, .systemRed, .systemGray, .systemOrange, .systemGray]
     
-    var todayList: Results<ReminderItem>!
-    var futureList: Results<ReminderItem>!
-    var list: Results<ReminderItem>!
-    var doneList: Results<ReminderItem>!
+    var todayTodoList: Results<ReminderItem>!
+    var futureTodoList: Results<ReminderItem>!
+    var allTodoList: Results<ReminderItem>!
+    var doneTodoList: Results<ReminderItem>!
     let repository = ReminderItemRepository()
     var counts: [Int] = [0,0,0,0,0]
     
-    var myReminderList: [String] = []
+    var myReminderLists: Results<MyList>!
     
     override func loadView() {
         self.view = mainView
@@ -38,7 +38,6 @@ class MainListViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        icons[0] = changeDayIcon()
     }
 
     // ???: 데이터가 많을 때 아래처럼 fetchDB를 viewWillAppear에서 하는건 비효율적이라면 어디에다 해야할까요...?
@@ -50,9 +49,11 @@ class MainListViewController: BaseViewController {
     override func configureView() {
         configureToolbar()
         configureNavigationBar()
+        icons[0] = changeDayIcon()
         mainView.tableView.delegate = self
         mainView.tableView.dataSource = self
         mainView.tableView.register(ReminderItemTypeTableViewCell.self, forCellReuseIdentifier: ReminderItemTypeTableViewCell.identifier)
+        mainView.tableView.register(MyListsTableViewCell.self, forCellReuseIdentifier: MyListsTableViewCell.identifier)
         fetchDB()
     }
     
@@ -92,14 +93,15 @@ class MainListViewController: BaseViewController {
     }
     
     private func fetchDB() {
-        todayList = repository.fetchTodayList()
-        futureList = repository.fetchFutureList()
-        list = repository.readDB()
-        doneList = repository.fetchDoneList()
-        counts[0] = todayList.count
-        counts[1] = futureList.count
-        counts[2] = list.count
-        counts[4] = doneList.count
+        todayTodoList = repository.fetchTodayList()
+        futureTodoList = repository.fetchFutureList()
+        allTodoList = repository.readReminderItem()
+        doneTodoList = repository.fetchDoneList()
+        myReminderLists = repository.readMyLists()
+        counts[0] = todayTodoList.count
+        counts[1] = futureTodoList.count
+        counts[2] = allTodoList.count
+        counts[4] = doneTodoList.count
         mainView.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
     }
     
@@ -134,21 +136,58 @@ extension MainListViewController: UITableViewDelegate, UITableViewDataSource {
         if section == 0 {
             return 1
         } else {
-            return myReminderList.count
+            return myReminderLists.count
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ReminderItemTypeTableViewCell.identifier, for: indexPath) as! ReminderItemTypeTableViewCell
-        cell.collectionView.register(ReminderItemTypeCollectionViewCell.self, forCellWithReuseIdentifier: ReminderItemTypeCollectionViewCell.identifier)
-        cell.collectionView.delegate = self
-        cell.collectionView.dataSource = self
-        cell.collectionView.reloadData()
-        return cell
+        
+        switch indexPath.section {
+        case 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: ReminderItemTypeTableViewCell.identifier, for: indexPath) as! ReminderItemTypeTableViewCell
+            cell.collectionView.register(ReminderItemTypeCollectionViewCell.self, forCellWithReuseIdentifier: ReminderItemTypeCollectionViewCell.identifier)
+            cell.collectionView.delegate = self
+            cell.collectionView.dataSource = self
+            cell.collectionView.reloadData()
+            return cell
+            
+        case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: MyListsTableViewCell.identifier) as! MyListsTableViewCell
+            let row = myReminderLists[indexPath.row]
+            cell.titleLabel.text = row.name
+            cell.countLabel.text = "\(row.reminderItemList.count)"
+            return cell
+        default:
+            let cell = tableView.dequeueReusableCell(withIdentifier: ReminderItemTypeTableViewCell.identifier, for: indexPath) as! ReminderItemTypeTableViewCell
+            return cell
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 300
+        if indexPath.section == 0 {
+            return 290
+        } else {
+            return 50
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 1 {
+            return "나의 목록"
+        }
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 1 {
+            let vc = TodoListViewController()
+            vc.list = repository.readReminderItem().where {
+                $0.superList.name == myReminderLists[indexPath.section].name
+            }
+        }
+        
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
 }
@@ -175,7 +214,7 @@ extension MainListViewController: UICollectionViewDelegate, UICollectionViewData
         } else if indexPath.item == 1 {
             vc.list = repository.fetchFutureList()
         } else if indexPath.item == 2 {
-            vc.list = repository.readDB()
+            vc.list = repository.readReminderItem()
         } else {
             vc.list = repository.fetchDoneList()
         }

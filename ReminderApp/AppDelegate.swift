@@ -6,14 +6,40 @@
 //
 
 import UIKit
+import RealmSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    let repository = ReminderItemRepository()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        let numberOfList = repository.readMyLists().count
+        
+        if numberOfList == 0 {
+            let list = MyList(name: "미리 알림", regDate: Date())
+            repository.createList(list)
+        }
+        
+        let configuration = Realm.Configuration(schemaVersion: 2) { migration,oldSchemaVersion in
+            
+            //1: reminderItem -> reminderItemList로 이름 변경
+            if oldSchemaVersion < 1 {
+                migration.renameProperty(onType: "MyList", from: "reminderItem", to: "reminderItemList")
+                print("Version: 0 -> 1")
+            }
+            
+            //2: ReminderItem에 LinkingObject 추가 // 따로 코드 작업은 필요하지 않음
+            if oldSchemaVersion < 2 {
+                print("Version: 1 -> 2")
+            }
+            
+        }
+        
+        Realm.Configuration.defaultConfiguration = configuration
+
+        
         return true
     }
 

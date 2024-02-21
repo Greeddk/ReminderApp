@@ -9,10 +9,12 @@ import Foundation
 import RealmSwift
 
 protocol DBProtocol {
+    func createList(_ list: MyList)
     func createItem(_ item: ReminderItem)
     func updateItem(id: ObjectId, title: String, memo: String?, dueDate: Date?, tag: String?, priority: String?)
     func updateDoneValue(item: ReminderItem)
-    func readDB() -> Results<ReminderItem>
+    func readReminderItem() -> Results<ReminderItem>
+    func readMyLists() -> Results<MyList>
     func fetchDoneList() -> Results<ReminderItem>
     func fetchTodayList() -> Results<ReminderItem>
     func fetchFutureList() -> Results<ReminderItem>
@@ -27,6 +29,16 @@ class ReminderItemRepository: DBProtocol {
     
     let start = Calendar.current.startOfDay(for: Date())
     lazy var end = Calendar.current.date(byAdding: .day, value: 1, to: start) ?? Date()
+    
+    func createList(_ list: MyList) {
+        do {
+            try realm.write {
+                realm.add(list)
+            }
+        } catch {
+            print("list create error")
+        }
+    }
     
     func createItem(_ item: ReminderItem) {
         do {
@@ -58,8 +70,12 @@ class ReminderItemRepository: DBProtocol {
         }
     }
     
-    func readDB() -> Results<ReminderItem> {
+    func readReminderItem() -> Results<ReminderItem> {
         return realm.objects(ReminderItem.self)
+    }
+    
+    func readMyLists() -> Results<MyList> {
+        return realm.objects(MyList.self)
     }
     
     func fetchDoneList() -> Results<ReminderItem> {
