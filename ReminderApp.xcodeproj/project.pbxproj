@@ -37,6 +37,7 @@
 		4268C4142B84BD0700826885 /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4268C4132B84BD0700826885 /* BaseTableViewCell.swift */; };
 		4268C41A2B84C59100826885 /* AddListModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4268C4192B84C59100826885 /* AddListModalViewController.swift */; };
 		4268C41C2B84C5B700826885 /* AddListModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4268C41B2B84C5B700826885 /* AddListModalView.swift */; };
+		4268C4282B85EA8200826885 /* TodoOptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4268C4272B85EA8200826885 /* TodoOptionTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -69,6 +70,7 @@
 		4268C4132B84BD0700826885 /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
 		4268C4192B84C59100826885 /* AddListModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddListModalViewController.swift; sourceTree = "<group>"; };
 		4268C41B2B84C5B700826885 /* AddListModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddListModalView.swift; sourceTree = "<group>"; };
+		4268C4272B85EA8200826885 /* TodoOptionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoOptionTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +151,7 @@
 			children = (
 				424233582B7CA3310087636D /* AddTodoViewController.swift */,
 				4242335D2B7CA9680087636D /* AddTodoView.swift */,
+				4268C4272B85EA8200826885 /* TodoOptionTableViewCell.swift */,
 			);
 			path = AddTodoView;
 			sourceTree = "<group>";
@@ -289,6 +292,7 @@
 				4268C41C2B84C5B700826885 /* AddListModalView.swift in Sources */,
 				424233522B7C95460087636D /* BaseView.swift in Sources */,
 				4268C41A2B84C59100826885 /* AddListModalViewController.swift in Sources */,
+				4268C4282B85EA8200826885 /* TodoOptionTableViewCell.swift in Sources */,
 				4242334D2B7C92580087636D /* MainListViewController.swift in Sources */,
 				424233372B7C91380087636D /* SceneDelegate.swift in Sources */,
 				4268C4122B84BCB800826885 /* ReminderItemTypeTableViewCell.swift in Sources */,

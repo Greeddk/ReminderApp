@@ -53,7 +53,7 @@ class AddTodoViewController: BaseViewController {
     override func loadView() {
         self.view = mainView
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(passData), name: NSNotification.Name("priority"), object: nil)
@@ -80,6 +80,7 @@ class AddTodoViewController: BaseViewController {
         mainView.tableView.dataSource = self
         mainView.tableView.delegate = self
         mainView.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
+        mainView.tableView.register(TodoOptionTableViewCell.self, forCellReuseIdentifier: TodoOptionTableViewCell.identifier)
         mainView.tableView.sectionFooterHeight = 0
     }
     
@@ -96,7 +97,7 @@ class AddTodoViewController: BaseViewController {
         navigationItem.leftBarButtonItem = cancelButton
         navigationItem.rightBarButtonItem = addButton
     }
-
+    
 }
 
 extension AddTodoViewController {
@@ -149,7 +150,7 @@ extension AddTodoViewController {
 extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 6
+        return 5
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -162,37 +163,10 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
-        
-        if indexPath.section == 5 {
-            cell.contentView.addSubview(pickedImageView)
-            pickedImageView.snp.makeConstraints { make in
-                make.centerX.equalTo(cell.contentView)
-                make.size.equalTo(300)
-            }
-            cell.backgroundColor = .clear
-            return cell
-        } else if indexPath.section != 0 {
-            var content = cell.defaultContentConfiguration()
-            content.text = cellText[indexPath.section]
-            content.textProperties.color = .white
-            content.textProperties.font = .systemFont(ofSize: 16)
-            if indexPath.section == 1 {
-                if let date = dueDate {
-                    content.secondaryText = changeDateFormat(data: date)
-                    content.secondaryTextProperties.font = .systemFont(ofSize: 10)
-                }
-            } else if indexPath.section == 2 {
-                content.secondaryText = tagText
-                content.secondaryTextProperties.font = .systemFont(ofSize: 10)
-            } else if indexPath.section == 3 {
-                content.secondaryText = changePriorityToString(priority: priority ?? "")
-                content.secondaryTextProperties.font = .systemFont(ofSize: 10)
-            }
-            cell.contentConfiguration = content
-            cell.accessoryType = .disclosureIndicator
-            return cell
-        } else {
+        if indexPath.section == 0 {
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
+            
             if indexPath.row == 0 {
                 let titleTextField = UITextField()
                 titleTextField.placeholder = "제목"
@@ -230,6 +204,30 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
                         memoTextView.textColor = .systemGray2
                     }
                 }
+                return cell
+            }
+            
+        } else {
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: TodoOptionTableViewCell.identifier, for: indexPath) as! TodoOptionTableViewCell
+            
+            cell.cellTitle.text = cellText[indexPath.section]
+            if indexPath.section == 1 {
+                if let date = dueDate {
+                    cell.subTitle.text = changeDateFormat(data: date)
+                }
+                return cell
+            } else if indexPath.section == 2 {
+                guard let tag = tagText else { return cell }
+                cell.subTitle.text = tag
+                return cell
+            } else if indexPath.section == 3 {
+                cell.subTitle.text = changePriorityToString(priority: priority ?? "")
+                return cell
+            } else if indexPath.section == 4 {
+                cell.pickedImage.image = pickedImageView.image
+                return cell
+            } else {
                 return cell
             }
         }
@@ -285,7 +283,7 @@ extension AddTodoViewController: UITextViewDelegate {
             textView.textColor = .systemGray2
         }
     }
-
+    
     func textViewDidBeginEditing(_ textView: UITextView) {
         guard textView.textColor == .systemGray2 else { return }
         textView.text = ""
@@ -306,6 +304,7 @@ extension AddTodoViewController: PassDataDelegate {
     func tagReciever(text: String) {
         tagText = text
         mainView.tableView.reloadSections([2], with: .automatic)
+        print(#function)
     }
     
 }
@@ -332,6 +331,7 @@ extension AddTodoViewController: UIImagePickerControllerDelegate, UINavigationCo
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             self.pickedImageView.image = pickedImage
+            mainView.tableView.reloadSections([4], with: .automatic)
         }
         dismiss(animated: true)
     }
