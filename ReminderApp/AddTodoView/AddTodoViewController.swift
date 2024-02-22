@@ -184,7 +184,7 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.contentView.addSubview(titleTextField)
                 titleTextField.snp.makeConstraints { make in
                     make.top.equalToSuperview().offset(12)
-                    make.leading.equalToSuperview().offset(16)
+                    make.horizontalEdges.equalToSuperview().inset(16)
                 }
                 if viewType == .modify {
                     titleTextField.text = todoTitle
@@ -202,7 +202,7 @@ extension AddTodoViewController: UITableViewDelegate, UITableViewDataSource {
                 memoTextView.snp.makeConstraints { make in
                     make.top.equalToSuperview().offset(4)
                     make.leading.equalToSuperview().offset(12)
-                    make.trailing.equalToSuperview().offset(8)
+                    make.trailing.equalToSuperview().offset(12)
                     make.bottom.equalToSuperview()
                 }
                 if viewType == .modify {

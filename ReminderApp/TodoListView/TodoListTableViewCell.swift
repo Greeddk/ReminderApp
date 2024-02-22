@@ -70,6 +70,7 @@ class TodoListTableViewCell: UITableViewCell {
         
         userImage.snp.makeConstraints { make in
             make.trailing.equalTo(contentView.snp.trailing).offset(-10)
+            make.centerY.equalTo(contentView)
             make.height.equalTo(contentView).inset(4)
             make.width.equalTo(80)
         }
