@@ -110,6 +110,13 @@ class MainListViewController: BaseViewController {
         mainView.tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
     }
     
+    private func showAlert() {
+        let alert = UIAlertController(title: "경고", message: "목록은 최소 1개가 있어야합니다.", preferredStyle: .alert)
+        let confirm = UIAlertAction(title: "확인", style: .default)
+        alert.addAction(confirm)
+        present(alert, animated: true)
+    }
+    
 }
 
 extension MainListViewController {
@@ -202,8 +209,22 @@ extension MainListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if indexPath.section == 1 {
             let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-                self.repository.deleteItem(item: self.myReminderLists[indexPath.row])
-                self.mainView.tableView.reloadData()
+                if self.myReminderLists.count == 1 {
+                    self.showAlert()
+                    self.mainView.tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
+                    return
+                } else {
+                    let data = self.myReminderLists[indexPath.row]
+                    do {
+                        try self.repository.realm.write {
+                            self.repository.realm.delete(data.reminderItemList)
+                        }
+                    } catch {
+                        print(error)
+                    }
+                    self.repository.deleteItem(item: data)
+                    self.mainView.tableView.reloadData()
+                }
             }
             delete.backgroundColor = .systemRed
             

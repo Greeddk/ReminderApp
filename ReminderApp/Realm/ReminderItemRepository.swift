@@ -101,6 +101,10 @@ class ReminderItemRepository: DBProtocol {
         return realm.objects(ReminderItem.self).sorted(byKeyPath: sortKey, ascending: true)
     }
     
+//    func deleteItems(list: List<ReminderItem>) {
+//        
+//    }
+    
     func deleteItem<T: Object>(item: T) {
         do {
             try realm.write {
